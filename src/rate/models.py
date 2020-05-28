@@ -20,7 +20,8 @@ class Rate(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.created}, ' \
+        return f'{self.id},\t ' \
+               f'{self.created}, ' \
                f'{self.get_source_display()}, ' \
                f'CCY: {self.get_currency_display()}, ' \
                f'buy: {self.buy}, ' \

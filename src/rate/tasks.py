@@ -24,13 +24,12 @@ def parse_privatbank():
         if item['ccy'] not in currency_type_mapper:
             continue
 
-        currency = currency_type_mapper[item['ccy']]
         buy = to_decimal(item['buy'])
         sale = to_decimal(item['sale'])
 
         last = Rate.objects.filter(
             source=mch.SOURCE_PRIVATBANK,
-            currency=currency,
+            currency=currency_type_mapper[item['ccy']],
         ).last()
 
         if last is None or last.buy != buy or last.sale != sale:
@@ -38,7 +37,7 @@ def parse_privatbank():
                 buy=buy,
                 sale=sale,
                 source=mch.SOURCE_PRIVATBANK,
-                currency=currency,
+                currency=currency_type_mapper[item['ccy']],
             )
 
 
@@ -54,18 +53,17 @@ def parse_monobank():
     }
     for item in response.json():
 
-        if item['currencyCodeA'] not in currency_type_mapper:
+        if item['currencyCodeA'] not in currency_type_mapper.keys():
             continue
         if item['currencyCodeB'] != 980:  # 980 = UAH
             continue
 
-        currency = currency_type_mapper[item['currencyCodeA']]
         buy = to_decimal(item['rateBuy'])
         sale = to_decimal(item['rateSell'])
 
         last = Rate.objects.filter(
             source=mch.SOURCE_MONOBANK,
-            currency=currency,
+            currency=currency_type_mapper[item['currencyCodeA']],
         ).last()
 
         if last is None or last.buy != buy or last.sale != sale:
@@ -73,7 +71,7 @@ def parse_monobank():
                 buy=buy,
                 sale=sale,
                 source=mch.SOURCE_MONOBANK,
-                currency=currency,
+                currency=currency_type_mapper[item['currencyCodeA']],
             )
 
 
@@ -90,13 +88,12 @@ def parse_vkurse():
         if key not in currency_type_mapper:
             continue
 
-        currency = currency_type_mapper[key]
         buy = to_decimal(value['buy'])
         sale = to_decimal(value['sale'])
 
         last = Rate.objects.filter(
             source=mch.SOURCE_VKURSE,
-            currency=currency,
+            currency=currency_type_mapper[key],
         ).last()
 
         if last is None or last.buy != buy or last.sale != sale:
@@ -104,7 +101,7 @@ def parse_vkurse():
                 buy=buy,
                 sale=sale,
                 source=mch.SOURCE_VKURSE,
-                currency=currency,
+                currency=currency_type_mapper[key],
             )
 
 
@@ -120,15 +117,15 @@ def parse_nbu():
     }
     for item in response.json():
 
-        if item['r030'] not in currency_type_mapper.keys():
+        if item['r030'] not in currency_type_mapper:
             continue
 
-        currency = currency_type_mapper[item['r030']]
         buy = to_decimal(item['rate'])
         sale = to_decimal('0.0')  # NBU HAS NO SALE RATE
+
         last = Rate.objects.filter(
             source=mch.SOURCE_NBU,
-            currency=currency,
+            currency=currency_type_mapper[item['r030']],
         ).last()
 
         if last is None or last.buy != buy:
@@ -136,7 +133,7 @@ def parse_nbu():
                 buy=buy,
                 sale=sale,
                 source=mch.SOURCE_NBU,
-                currency=currency,
+                currency=currency_type_mapper[item['r030']],
             )
 
 
@@ -195,13 +192,12 @@ def parse_pumb():
             if currency not in currency_type_mapper:
                 continue
 
-            currency = currency_type_mapper[currency]
             buy = to_decimal(item.find_all('td')[1].text.strip())
             sale = to_decimal(item.find_all('td')[2].text.strip())
 
             last = Rate.objects.filter(
                 source=mch.SOURCE_PUMB,
-                currency=currency,
+                currency=currency_type_mapper[currency],
             ).last()
 
             if last is None or last.buy != buy or last.sale != sale:
@@ -209,7 +205,7 @@ def parse_pumb():
                     buy=buy,
                     sale=sale,
                     source=mch.SOURCE_PUMB,
-                    currency=currency,
+                    currency=currency_type_mapper[currency],
                 )
 
 
