@@ -53,7 +53,7 @@ def parse_monobank():
     }
     for item in response.json():
 
-        if item['currencyCodeA'] not in currency_type_mapper.keys():
+        if item['currencyCodeA'] not in currency_type_mapper:
             continue
         if item['currencyCodeB'] != 980:  # 980 = UAH
             continue
@@ -210,6 +210,40 @@ def parse_pumb():
 
 
 @shared_task
+def parse_pivdenniy():
+    url = 'https://bank.com.ua/'
+    response = requests.get(url)
+    currency_type_mapper = {
+        'USD': mch.CURRENCY_USD,
+        'EUR': mch.CURRENCY_EUR,
+        'RUB': mch.CURRENCY_RUR,
+    }
+    soup = bs4.BeautifulSoup(response.text, 'lxml')
+    data = soup.find_all('div', {'class': 'course-table__row'})
+
+    for item in data:
+        if item.find_all('span'):
+            currency = item.find_all('span', {'class': 'course-table__code'})[0].text.strip()
+            if currency not in currency_type_mapper:
+                continue
+            buy = to_decimal(item.find_all('span', {'class': 'course-table__rate'})[0].text.strip())
+            sale = to_decimal(item.find_all('span', {'class': 'course-table__rate'})[1].text.strip())
+
+            last = Rate.objects.filter(
+                source=mch.SOURCE_PIVDENNIY,
+                currency=currency_type_mapper[currency],
+            ).last()
+
+            if last is None or last.buy != buy or last.sale != sale:
+                Rate.objects.create(
+                    buy=buy,
+                    sale=sale,
+                    source=mch.SOURCE_PIVDENNIY,
+                    currency=currency_type_mapper[currency],
+                )
+
+
+@shared_task
 def parse():
     parse_monobank.delay()
     parse_privatbank.delay()
@@ -217,3 +251,4 @@ def parse():
     parse_nbu.delay()
     parse_alfabank.delay()
     parse_pumb.delay()
+    parse_pivdenniy.delay()
