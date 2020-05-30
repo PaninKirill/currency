@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Rate List{% endblock title %}
+
+{% block content %}
+
+<form method="get" class="uniForm">
+    <div class="form-row">
+        <div class="form-group col-md-3 mb-0">
+            {{ filter.form.ordering|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-3 mb-0">
+            {{ filter.form.created|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-3 mb-0">
+            {{ filter.form.source|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-2 mb-0">
+            {{ filter.form.currency|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-1 mb-0">
+            &ensp;&ensp;&ensp;
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </div>
+</form>
+<div class="row">
+    <div class="col">
+        <table class="table table-sm table-striped">
+            <tr>
+                <th>ID</th>
+                <th>Updated</th>
+                <th>Source</th>
+                <th>Currency</th>
+                <th>Buy</th>
+                <th>Sale</th>
+            </tr>
+            {% for rate in filter.qs %}
+            <tr>
+                <td>{{ rate.id }}</td>
+                <td>{{ rate.created }}</td>
+                <td>{{ rate.get_source_display }}</td>
+                <td>{{ rate.get_currency_display }}</td>
+                <td>{{ rate.buy }}</td>
+                <td>{{ rate.sale }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% include 'snippets/pagination.html' %}
+    </div>
+    <div class="col">
+        <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    {% include 'snippets/charts.js' %}
+
+</script>
+{% endblock scripts %}

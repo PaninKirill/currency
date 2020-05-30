@@ -21,6 +21,9 @@ INSTALLED_APPS = [
     # pip apps
     'django_extensions',
     'debug_toolbar',
+    'django_filters',
+    'crispy_forms',
+    'rest_framework',
 
     # custom
     'account',
@@ -65,6 +68,12 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -94,9 +103,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = (
+  os.path.join(BASE_DIR, 'static/css'),
+)
+
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+# CRISPY_TEMPLATE_PACK = 'uni_form'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 CELERY_BROKER_URL = 'amqp://localhost'
 

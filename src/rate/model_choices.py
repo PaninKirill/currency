@@ -26,3 +26,8 @@ CURRENCY_CHOICES = (
     (CURRENCY_RUR, 'RUR'),
     (CURRENCY_BTC, 'BTC'),
 )
+
+FILTER_CHOICES = (
+    ('ASC', 'Ascending'),
+    ('DESC', 'Descending'),
+)
