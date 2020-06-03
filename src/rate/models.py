@@ -37,3 +37,6 @@ class Rate(models.Model):
         If obj was changed recently <= 15 min (considering current time)
         """
         return self.created >= (timezone.now() - datetime.timedelta(minutes=15))
+
+    def latest_date_update(self):
+        return timezone.now() - self.created

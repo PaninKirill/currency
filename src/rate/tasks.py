@@ -119,13 +119,13 @@ def parse_nbu():
 
         if item['r030'] not in currency_type_mapper:
             continue
-
+        currency = currency_type_mapper[item['r030']]
         buy = to_decimal(item['rate'])
         sale = to_decimal('0.0')  # NBU HAS NO SALE RATE
 
         last = Rate.objects.filter(
             source=mch.SOURCE_NBU,
-            currency=currency_type_mapper[item['r030']],
+            currency=currency,
         ).last()
 
         if last is None or last.buy != buy:
@@ -133,7 +133,7 @@ def parse_nbu():
                 buy=buy,
                 sale=sale,
                 source=mch.SOURCE_NBU,
-                currency=currency_type_mapper[item['r030']],
+                currency=currency,
             )
 
 
