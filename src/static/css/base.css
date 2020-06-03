@@ -1,5 +1,5 @@
 body {
-    padding-top: 50px;
+    padding-top: 60px;
     background-color: #ebffff;
     font-size: 12px;
 }
@@ -25,7 +25,7 @@ label {
 }
 
 .btn-primary {
-    background-color: #4a4a4a;
+    background-color: #353a40;
     border: none;
     color: #ffffff;
     text-decoration: none;
@@ -39,7 +39,7 @@ label {
     background-color: blue;
     transition-duration: 0.3s;
     color: white;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    box-shadow: 0 4px 8px 0 rgba(36,36,173,0.5), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
 td {
@@ -57,11 +57,12 @@ tr:nth-child(even){
 }
 
 th {
-    background-color: #4a4a4a;
+    background-color: #353a40;
     padding: 8px;
     color: white;
-    border-right: 1px solid #757575;
     text-align: center;
+    box-shadow: 0 2px 4px 0 rgba(36,36,173,0.5), 0 6px 10px 0 rgba(0,0,0,0.19);
+    border-bottom: 1px solid orange;
 }
 
 .select {
@@ -76,10 +77,15 @@ th {
     padding-top: 15px;
 }
 
-.logo {
-    width:20px;
+.navbar-expand-lg  {
+    box-shadow: 0 2px 4px 0 rgba(36,36,173,0.5), 0 6px 10px 0 rgba(0,0,0,0.19);
+    border-bottom: 1px solid orange;
 }
 
-.nav-link {
-    color: blue;
+.dropdown-menu {
+    background-color: #353a40;
+    box-shadow: 0 2px 4px 0 rgba(36,36,173,0.5), 0 6px 10px 0 rgba(0,0,0,0.19);
+    font-size: 12px;
+    text-indent: 10px;
+    border-bottom: 1px solid orange;
 }

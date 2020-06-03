@@ -11,10 +11,10 @@
         <div class="form-group col-md-3 mb-0">
             {{ filter.form.ordering|as_crispy_field }}
         </div>
-        <div class="form-group col-md-3 mb-0">
+        <div class="form-group col-md-4 mb-0">
             {{ filter.form.created|as_crispy_field }}
         </div>
-        <div class="form-group col-md-3 mb-0">
+        <div class="form-group col-md-2 mb-0">
             {{ filter.form.source|as_crispy_field }}
         </div>
         <div class="form-group col-md-2 mb-0">
@@ -26,11 +26,17 @@
         </div>
     </div>
 </form>
+<div id="rates-download">
+    <i>Download Rates:</i>
+    <a href="{% url 'rate:download-csv' %}">csv</a>
+    <a href="{% url 'rate:download-xlsx' %}">xlsx</a>
+    <a href="{% url 'rate:download-json' %}">json</a>
+</div>
 <div class="row">
     <div class="col">
         <table class="table table-sm table-striped">
             <tr>
-                <th>ID</th>
+                <th>#</th>
                 <th>Updated</th>
                 <th>Source</th>
                 <th>Currency</th>
@@ -39,7 +45,7 @@
             </tr>
             {% for rate in filter.qs %}
             <tr>
-                <td>{{ rate.id }}</td>
+                <td>{{ forloop.counter }}</td>
                 <td>{{ rate.created }}</td>
                 <td>{{ rate.get_source_display }}</td>
                 <td>{{ rate.get_currency_display }}</td>
@@ -58,7 +64,7 @@
 {% endblock content %}
 
 {% block scripts %}
-<script>
+<script type="text/javascript">
     {% include 'snippets/charts.js' %}
 
 </script>

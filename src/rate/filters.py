@@ -1,6 +1,5 @@
-from django.forms import DateInput
-
 import django_filters
+from django_filters.widgets import RangeWidget
 
 from rate import model_choices as mch
 from rate.models import Rate
@@ -12,19 +11,18 @@ class RateFilter(django_filters.FilterSet):
         choices=mch.FILTER_CHOICES,
         method='filter_by_order',
     )
-    created = django_filters.DateFilter(
+    created = django_filters.DateTimeFromToRangeFilter(
         field_name='created',
         lookup_expr='date',
-        widget=DateInput(attrs={
+        widget=RangeWidget(attrs={
             'class': 'datepicker',
             'type': 'date',
-            'placeholder': 'Select a date',
         })
     )
 
     class Meta:
         model = Rate
-        fields = ['created', 'source', 'currency']
+        fields = ['ordering', 'source', 'currency', 'created']
 
     def filter_by_order(self, queryset, name, value):
         expression = 'created' if value == 'ASC' else '-created'

@@ -1,15 +1,18 @@
 $(document).ready(function(){
+    var options = {
+        bezierCurve : false
+    };
     var ctx = document.getElementById('myChart').getContext('2d');
     var myChart = new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
-            labels: [{% for item in rate_list %}'{{item.created}}',{% endfor %}],
+            labels: [{% for item in object_list %}'{{item.get_currency_display}}',{% endfor %}],
             datasets: [{
                 label: 'Buy',
-                data: [{% for item in rate_list %}'{{item.buy}}',{% endfor %}],
+                data: [{% for item in object_list %}'{{item.source}}',{% endfor %}],
 
                 backgroundColor: [
-                    'rgba(218, 255, 33, 0.1)'
+                    'rgba(190, 247, 45, 0.1)'
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)',
@@ -23,10 +26,10 @@ $(document).ready(function(){
             },
             {
                 label: 'Sale',
-                data: [{% for item in rate_list %}{% if item.sale != 0.0 %}'{{item.sale}}'{% endif %},{% endfor %}],
+                data: [{% for item in object_list %}{% if item.sale != 0.0 %}'{{item.sale}}'{% endif %},{% endfor %}, [{% for item in object_list %}'{{item.buy}}',{% endfor %}]],
 
                 backgroundColor: [
-                    'rgba(116, 167, 247, 0.2)'
+                    'rgba(116, 167, 247, 0.1)'
                 ],
                 borderColor: [
                     'rgba(0, 99, 132, 1)',

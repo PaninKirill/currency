@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Rate List{% endblock title %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col">
+        <table class="table table-sm table-striped">
+            <tr>
+                <th>#</th>
+                <th>Updated</th>
+                <th>Source</th>
+                <th>Currency</th>
+                <th>Buy</th>
+                <th>Sale</th>
+            </tr>
+            {% for rate in object_list %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ rate.created }}</td>
+                <td>{{ rate.get_source_display }}</td>
+                <td>{{ rate.get_currency_display }}</td>
+                <td>{{ rate.buy }}</td>
+                <td>{{ rate.sale }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col">
+        <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script type="text/javascript">
+    {% include 'snippets/charts-latest.js' %}
+
+</script>
+{% endblock scripts %}
