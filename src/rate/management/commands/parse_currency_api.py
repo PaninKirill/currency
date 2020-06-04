@@ -1,3 +1,4 @@
+import time
 from datetime import date, datetime, timedelta
 
 from django.core.management.base import BaseCommand
@@ -5,7 +6,7 @@ from django.core.management.base import BaseCommand
 from rate import model_choices as mch
 from rate.models import Rate
 from rate.utils import to_decimal
-import time
+
 import requests
 
 
