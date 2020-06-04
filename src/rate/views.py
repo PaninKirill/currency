@@ -3,6 +3,7 @@ from io import BytesIO
 from urllib.parse import urlencode
 
 from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.views.generic import TemplateView, View
 
@@ -53,7 +54,6 @@ class LatestRatesView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         object_list = []
-        qs_json = {}
 
         for source in mch.SOURCE_CHOICES:  # source
             source = source[0]
@@ -64,16 +64,12 @@ class LatestRatesView(TemplateView):
                         source=source,
                         currency=currency,
                     ).latest()
-                except Rate.DoesNotExist:
+                except ObjectDoesNotExist:
                     continue
                 if rate is not None:
                     object_list.append(rate)
-                    rate_id = rate.id
-                    qs_json[rate_id] = rate
 
         context['object_list'] = object_list
-
-        context['qs_json'] = qs_json
 
         return context
 
