@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 from rate import model_choices as mch
 from rate.models import Rate
 from rate.utils import to_decimal
-
+import time
 import requests
 
 
@@ -22,6 +22,7 @@ class Command(BaseCommand):
                 start_date += timedelta(days=1)
 
         for archive_date in date_generator():
+            time.sleep(10)
             url = f'https://api.privatbank.ua/p24api/exchange_rates?json&date={archive_date}'
             response = requests.get(url)
             currency_type_mapper = {
