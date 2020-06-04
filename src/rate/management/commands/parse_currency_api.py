@@ -1,5 +1,7 @@
 import time
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
+
+from dateutil.relativedelta import relativedelta
 
 from django.core.management.base import BaseCommand
 
@@ -16,8 +18,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         def date_generator():
-            start_date = date(2019, 1, 1)
-            end_date = date(2020, 5, 24)
+            end_date = datetime.now().date()
+            start_date = end_date - relativedelta(years=4)
             while start_date <= end_date:
                 yield start_date.strftime("%d.%m.%Y")
                 start_date += timedelta(days=1)
