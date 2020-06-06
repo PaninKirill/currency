@@ -14,22 +14,16 @@
                         <span class="sr-only">(current)</span>
                     </a>
                 </li>
-                <li class="dropdown {{ request.path|active:'rate:list' }}">
-                    <a class="nav-link" href="{% url 'rate:list' %}" data-toggle="dropdown">Dropdown <span
-                            class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu" >
-                        <li class="nav-item"><a href="#">Rates</a></li>
-                        <li class="divider"></li>
-                        <li class="nav-item {{ request.path|active:'rate:rate-latest' }}"><a
-                                href="{% url 'rate:rate-latest' %}">Rates Latest</a></li>
-                        <li class="divider"></li>
-                        <li class="nav-item"><a href="#">Rates Charts</a></li>
-                        <li class="divider"></li>
-                        <li class="nav-item"><a href="{% url 'rate:api' %}">API</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item {{ request.path|active:'rate:list' }}">
-                    <a class="nav-link" href="{% url 'rate:list' %}">Rates info</a>
+                <li class="nav-item dropdown {{ request.path|active:'rate:list' }}">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
+                       aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">Rates</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item {{ request.path|active:'rate:list' }}" href="{% url 'rate:list' %}">Rates</a>
+
+                        <a class="dropdown-item {{ request.path|active:'rate:rate-latest' }}" href="{% url 'rate:rate-latest' %}">Rates Latest</a>
+                        <a class="dropdown-item" href="#">Rates Charts</a>
+                        <a class="dropdown-item" href="{% url 'rate:api' %}">API</a>
+                    </div>
                 </li>
                 {% if request.user.is_authenticated %}
                 <li class="nav-item">

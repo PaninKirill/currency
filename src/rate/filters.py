@@ -1,20 +1,26 @@
 import django_filters
-from django_filters.widgets import RangeWidget
+from django_filters.widgets import DateRangeWidget
 
-from rate import model_choices as mch
 from rate.models import Rate
 
 
 class RateFilter(django_filters.FilterSet):
-    ordering = django_filters.ChoiceFilter(
+    ordering = django_filters.OrderingFilter(
         label='Ordering',
-        choices=mch.FILTER_CHOICES,
-        method='filter_by_order',
+        choices=(
+            ('created', 'Date (ascending)'),
+            ('-created', 'Date (descending)'),
+            ('sale', 'Currency sale (ascending)'),
+            ('-sale', 'Currency sale (descending)'),
+            ('buy', 'Currency buy (ascending)'),
+            ('-buy', 'Currency buy (descending)'),
+        ),
     )
     created = django_filters.DateTimeFromToRangeFilter(
+        label='Updated date range',
         field_name='created',
         lookup_expr='date',
-        widget=RangeWidget(attrs={
+        widget=DateRangeWidget(attrs={
             'class': 'datepicker',
             'type': 'date',
         })
@@ -22,8 +28,4 @@ class RateFilter(django_filters.FilterSet):
 
     class Meta:
         model = Rate
-        fields = ['ordering', 'source', 'currency', 'created']
-
-    def filter_by_order(self, queryset, name, value):
-        expression = 'created' if value == 'ASC' else '-created'
-        return queryset.order_by(expression)
+        fields = '__all__'

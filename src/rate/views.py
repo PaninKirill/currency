@@ -3,15 +3,14 @@ from io import BytesIO
 from urllib.parse import urlencode
 
 from django.core import serializers
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.views.generic import TemplateView, View
 
 from django_filters.views import FilterView
 
-from rate import model_choices as mch
 from rate.filters import RateFilter
 from rate.models import Rate
+from rate.selectors import get_latest_rates
 from rate.utils import display
 
 from rest_framework.views import APIView
@@ -19,15 +18,16 @@ from rest_framework.views import APIView
 import xlsxwriter
 
 
-class RateList(FilterView):
+class FilteredRateList(FilterView):  # TODO  implement initial filter params
     filterset_class = RateFilter
-    queryset = Rate.objects.all()
-    template_name = 'rate-list.html'
-    paginate_by = 50
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = Rate.objects.all().filter(currency=1).order_by('-created')
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filter'] = RateFilter(self.request.GET, queryset=self.queryset)
+        context['filter'] = RateFilter(self.request.GET, queryset=self.get_queryset())
 
         query_params = dict(self.request.GET.items())
         if 'page' in query_params:
@@ -35,6 +35,11 @@ class RateList(FilterView):
         context['query_params'] = urlencode(query_params)
 
         return context
+
+
+class RatesList(FilteredRateList):
+    template_name = 'rate-list.html'
+    paginate_by = 25
 
 
 class ChartData(APIView):
@@ -47,34 +52,18 @@ class ChartData(APIView):
         return HttpResponse(qs_json, content_type='application/json')
 
 
-class LatestRatesView(TemplateView):
-    filterset_class = RateFilter
+class LatestRatesView(TemplateView):  # TODO implement indicators to latest update on fields buy/sale (up/down arrows)
     template_name = 'rate-latest.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        object_list = []
 
-        for source in mch.SOURCE_CHOICES:  # source
-            source = source[0]
-            for currency in mch.CURRENCY_CHOICES:  # currency
-                try:
-                    currency = currency[0]
-                    rate = Rate.objects.filter(
-                        source=source,
-                        currency=currency,
-                    ).latest()
-                except ObjectDoesNotExist:
-                    continue
-                if rate is not None:
-                    object_list.append(rate)
-
-        context['object_list'] = object_list
+        context['object_list'] = get_latest_rates()
 
         return context
 
 
-class RateDownloadCSV(View):
+class RateDownloadCSV(View):  # TODO get rid off filtered data
     HEADERS = (
         'id',
         'created',
@@ -106,7 +95,7 @@ class RateDownloadCSV(View):
         return response
 
 
-class RateDownloadXLSX(View):
+class RateDownloadXLSX(View):  # TODO get rid off filtered data
     HEADERS = (
         'id',
         'created',
@@ -144,7 +133,7 @@ class RateDownloadXLSX(View):
         return response
 
 
-class RateDownloadJSON(View):
+class RateDownloadJSON(View):  # TODO get rid off filtered data
     authentication_classes = []
     permission_classes = []
 
