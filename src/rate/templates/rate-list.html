@@ -2,23 +2,25 @@
 
 {% load crispy_forms_tags %}
 
-{% block title %}Rate List{% endblock title %}
+{% crispy form form.helper 'bootstrap' %}
+
+{% block title %}<title> Rate List </title>{% endblock title %}
 
 {% block content %}
 
 <form method="get" class="uniForm">
     <div class="form-row">
-        <div class="form-group col-md-3 mb-0">
-            {{ filter.form.ordering|as_crispy_field }}
+        <div class="form-group col-md-2 mb-0">
+            {{ filter.form.ordering|as_crispy_field:"bootstrap" }}
         </div>
-        <div class="form-group col-md-4 mb-0">
-            {{ filter.form.created|as_crispy_field }}
+        <div class="form-group  col-md-5 mb-0">
+            {{ filter.form.created|as_crispy_field:"bootstrap" }}
         </div>
         <div class="form-group col-md-2 mb-0">
-            {{ filter.form.source|as_crispy_field }}
+            {{ filter.form.source|as_crispy_field:"bootstrap" }}
         </div>
         <div class="form-group col-md-2 mb-0">
-            {{ filter.form.currency|as_crispy_field }}
+            {{ filter.form.currency|as_crispy_field:"bootstrap" }}
         </div>
         <div class="form-group col-md-1 mb-0">
             &ensp;&ensp;&ensp;
@@ -43,7 +45,7 @@
                 <th>Buy</th>
                 <th>Sale</th>
             </tr>
-            {% for rate in filter.qs %}
+            {% for rate in object_list %}
             <tr>
                 <td>{{ forloop.counter }}</td>
                 <td>{{ rate.created }}</td>

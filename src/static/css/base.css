@@ -18,12 +18,6 @@ label {
     color: orange;
 }
 
-.pagination {
-    text-align: center;
-    margin-top: 1px;
-    width: 100%;
-}
-
 .btn-primary {
     background-color: #353a40;
     border: none;
@@ -61,24 +55,19 @@ th {
     padding: 8px;
     color: white;
     text-align: center;
+    font-size: 12px;
     box-shadow: 0 2px 4px 0 rgba(36,36,173,0.5), 0 6px 10px 0 rgba(0,0,0,0.19);
     border-bottom: 1px solid orange;
 }
 
-.select {
-    font-size: 12px;
+.form-control {  /* filter */
+   font-size: 12px;
+   background-clip: padding-box;
 }
 
-.datepicker {
-    font-size: 12px;
-}
-
-.uniForm {
-    padding-top: 15px;
-}
 
 .navbar-expand-lg  {
-    box-shadow: 0 2px 4px 0 rgba(36,36,173,0.5), 0 6px 10px 0 rgba(0,0,0,0.19);
+    box-shadow: 0 2px 4px 0 rgba(36,36,173,0.5), 0 2px 4px 0 rgba(0,0,0,0.19);
     border-bottom: 1px solid orange;
 }
 
@@ -86,6 +75,43 @@ th {
     background-color: #353a40;
     box-shadow: 0 2px 4px 0 rgba(36,36,173,0.5), 0 6px 10px 0 rgba(0,0,0,0.19);
     font-size: 12px;
-    text-indent: 10px;
     border-bottom: 1px solid orange;
 }
+
+.dropdown-item {
+     color: orange
+}
+
+.page-link {
+    padding: 4px;
+    color: black;
+    border-bottom: 1px solid orange;
+}
+
+.page-link:hover {
+    background-color: orange;
+    transition-duration: 0.3s;
+    color: white;
+    box-shadow: 0 2px 2px 0 rgba(36,36,173,0.2), 0 2px 2px 0 rgba(0,0,0,0.19);
+}
+
+.page-item.active .page-link{
+    z-index:3;
+    color:#fff;
+    background-color: rgb(53, 58, 64,0.8);
+    border-bottom: 1px solid orange;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 17px;
+  border-top: 1px solid orange;
+  background-color: #353a40;
+  box-shadow: 0px 0px 2px 4px rgba(36,36,173,0.2), 0px 12px 2px 4px rgba(0,0,0,0.19);
+  color: white;
+  text-align: center;
+}
+

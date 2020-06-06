@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static '403.css' %}">
+    <link href="{% static '403.css' %}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block title %}<title>403 Permission denied</title>{% endblock title %}
+
+{% block content %}
+
+<div class="self-type">
+    <p id="error403">403</p>
+    <code><span>this_page</span>.<em>is_found</em> = true;</code>
+    <code><span>if</span> (<b>you_don't_have_permission</b>) {<span>try_switch_account()</span>;}</code>
+    <code><span>else if (<b>you_don't_meet_requirements</b>)</span> {<em>alert</em>(<i>"We're really sorry about that."</i>); <span>window</span>.<em>location</em>
+        = home;}</code>
+    <center><a href="{% url 'index' %}">
+        <button type="submit" class="btn btn-outline-warning"> BACK TO HOME PAGE</button>
+    </a></center>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script type="text/javascript">
+
+     {% include 'snippets/403.js' %}
+
+</script>
+{% endblock scripts %}
