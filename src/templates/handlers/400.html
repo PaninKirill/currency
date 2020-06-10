@@ -2,12 +2,11 @@
 
 {% load static %}
 
-{% block extrahead %}
-    <link rel="stylesheet" href="{% static '400.css' %}">
-    <link href="{% static '400.css' %}" type="text/css" rel="stylesheet">
-{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/400.css' %}">
+{% endblock extra_css %}
 
-{% block title %}<title>400 Bad request</title>{% endblock title %}
+{% block title %} 400 Bad request {% endblock title %}
 
 {% block content %}
 
@@ -24,10 +23,6 @@
 
 {% endblock content %}
 
-{% block scripts %}
-<script type="text/javascript">
-
-     {% include 'snippets/404.js' %}
-
-</script>
-{% endblock scripts %}
+{% block extra_js %}
+    <script src="{% static 'js/404.js' %}"></script>
+{% endblock extra_js %}

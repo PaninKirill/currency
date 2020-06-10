@@ -2,12 +2,11 @@
 
 {% load static %}
 
-{% block extrahead %}
-    <link rel="stylesheet" href="{% static '403.css' %}">
-    <link href="{% static '403.css' %}" type="text/css" rel="stylesheet">
-{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/403.css' %}">
+{% endblock extra_css %}
 
-{% block title %}<title>403 Permission denied</title>{% endblock title %}
+{% block title %} 403 Permission denied {% endblock title %}
 
 {% block content %}
 
@@ -24,10 +23,6 @@
 
 {% endblock content %}
 
-{% block scripts %}
-<script type="text/javascript">
-
-     {% include 'snippets/404.js' %}
-
-</script>
-{% endblock scripts %}
+{% block extra_js %}
+    <script src="{% static 'js/404.js' %}"></script>
+{% endblock extra_js %}
