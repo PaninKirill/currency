@@ -11,4 +11,6 @@ urlpatterns = [
     path('download-csv/', views.RateDownloadCSV.as_view(), name='download-csv'),
     path('download-xlsx/', views.RateDownloadXLSX.as_view(), name='download-xlsx'),
     path('download-json/', views.RateDownloadJSON.as_view(), name='download-json'),
+    path('rate-edit/<int:pk>', views.EditRate.as_view(), name='edit'),
+    path('rate-remove/<int:pk>', views.DeleteRate.as_view(), name='remove'),
 ]

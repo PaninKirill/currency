@@ -1,0 +1,31 @@
+from django.conf import settings
+from django.contrib.auth.views import redirect_to_login
+from django.core.exceptions import PermissionDenied
+
+
+class AuthRequiredMixin(object):
+    """
+    Checks if the user is authenticated. If hi is - return the
+    normal dispatch. If not, redirect to login page.
+    """
+    login_url = settings.LOGIN_URL
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect_to_login(request.get_full_path(), self.login_url)
+
+        return super(AuthRequiredMixin, self).dispatch(
+            request, *args, **kwargs)
+
+
+class AdminRequiredMixin(object):
+    """
+    Checks if the user is superuser. If he is -  return the
+    normal dispatch. If not, redirect to 403 page.
+    """
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            raise PermissionDenied
+
+        return super(AdminRequiredMixin, self).dispatch(
+            request, *args, **kwargs)

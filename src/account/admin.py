@@ -1,3 +1,10 @@
-from django.contrib import admin  # NOQA
+from account.models import User
 
-# Register your models here.
+from django.contrib import admin
+
+
+class AccountAdmin(admin.ModelAdmin):
+    list_per_page = 25
+
+
+admin.site.register(User, AccountAdmin)

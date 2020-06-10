@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% load crispy_forms_tags %}
 
-{% block title %} <title>Latest Rates</title> {% endblock title %}
+{% block title %} Latest rates {% endblock title %}
 
 {% block content %}
 
@@ -35,9 +37,6 @@
 </div>
 {% endblock content %}
 
-{% block scripts %}
-<script type="text/javascript">
-    {% include 'snippets/charts-latest.js' %}
-
-</script>
-{% endblock scripts %}
+{% block extra_js %}
+    <script src="{% static 'js/charts-latest.js' %}"></script>
+{% endblock extra_js %}

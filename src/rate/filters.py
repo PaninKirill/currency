@@ -17,11 +17,11 @@ class RateFilter(django_filters.FilterSet):
         ),
     )
     created = django_filters.DateTimeFromToRangeFilter(
-        label='Updated date range',
+        label='Date range',
         field_name='created',
         lookup_expr='date',
         widget=DateRangeWidget(attrs={
-            'class': 'datepicker',
+            'class': 'form-control datetimepicker-input',
             'type': 'date',
         })
     )

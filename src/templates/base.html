@@ -7,9 +7,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
           crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'base.css' %}">
-    <link href="{% static 'base.css' %}" type="text/css" rel="stylesheet">
-    {% block extrahead %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_css %}{% endblock extra_css %}
     <!--Chart js-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
             integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw="
@@ -21,7 +20,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
 
-    {% block title %}<title>Rates</title>{% endblock title %}
+    <title>{% block title %}{% endblock title %}</title>
 </head>
 <body>
 <div class="container">
@@ -39,7 +38,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
-{% block scripts %}{% endblock scripts %}
+{% block extra_js %}{% endblock extra_js %}
 </body>
 
 {% block footer %}
