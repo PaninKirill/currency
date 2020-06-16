@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% crispy form form.helper 'bootstrap' %}
+
+{% block title %}
+Profile Edit
+{% endblock title %}
+
+{% block content %}
+
+<h1>Profile Edit</h1>
+<div class="card">
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy:"bootstrap" }}
+        <br>
+        <button class="btn btn-card" type="submit">Send</button>
+        <a href="{% url 'index' %}"><button class="btn btn-card"> Cancel </button></a>
+    </form>
+</div>
+
+{% endblock content %}

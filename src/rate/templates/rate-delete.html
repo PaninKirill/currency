@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Delete rate
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+    <form method="post">
+        {% csrf_token %}
+        <h1>Are you sure you want to delete "{{ object }}"?</h1>
+        <button value="Confirm" class="btn btn-card" type="submit">Confirm</button>
+    </form>
+    <a href="{% url 'rate:list' %}"><button class="btn btn-card"> Cancel </button></a>
+</div>
+{% endblock content %}

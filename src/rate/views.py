@@ -4,15 +4,18 @@ from urllib.parse import urlencode
 
 from django.core import serializers
 from django.http import HttpResponse
-from django.views.generic import TemplateView, View
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView, TemplateView, UpdateView, View
 
 from django_filters.views import FilterView
 
 from rate.filters import RateFilter
+from rate.mixins import AdminRequiredMixin, AuthRequiredMixin
 from rate.models import Rate
 from rate.selectors import get_latest_rates
 from rate.utils import display
 
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 import xlsxwriter
@@ -22,7 +25,7 @@ class FilteredRateList(FilterView):  # TODO  implement initial filter params
     filterset_class = RateFilter
 
     def get_queryset(self, *args, **kwargs):
-        queryset = Rate.objects.all().filter(currency=1).order_by('-created')
+        queryset = Rate.objects.all().order_by('-created')
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -43,8 +46,7 @@ class RatesList(FilteredRateList):
 
 
 class ChartData(APIView):
-    authentication_classes = []
-    permission_classes = []
+    permission_classes = [IsAuthenticated]  # restrictions apply to view data only auth users
 
     def get(self, request):
         queryset = Rate.objects.all().iterator()
@@ -52,7 +54,8 @@ class ChartData(APIView):
         return HttpResponse(qs_json, content_type='application/json')
 
 
-class LatestRatesView(TemplateView):  # TODO implement indicators to latest update on fields buy/sale (up/down arrows)
+class LatestRatesView(AuthRequiredMixin,
+                      TemplateView):  # TODO implement indicators to latest update on fields buy/sale (up/down arrows)
     template_name = 'rate-latest.html'
 
     def get_context_data(self, **kwargs):
@@ -63,7 +66,7 @@ class LatestRatesView(TemplateView):  # TODO implement indicators to latest upda
         return context
 
 
-class RateDownloadCSV(View):  # TODO get rid off filtered data
+class RateDownloadCSV(AuthRequiredMixin, View):  # TODO get rid off filtered data
     HEADERS = (
         'id',
         'created',
@@ -95,7 +98,7 @@ class RateDownloadCSV(View):  # TODO get rid off filtered data
         return response
 
 
-class RateDownloadXLSX(View):  # TODO get rid off filtered data
+class RateDownloadXLSX(AuthRequiredMixin, View):  # TODO get rid off filtered data
     HEADERS = (
         'id',
         'created',
@@ -133,9 +136,8 @@ class RateDownloadXLSX(View):  # TODO get rid off filtered data
         return response
 
 
-class RateDownloadJSON(View):  # TODO get rid off filtered data
-    authentication_classes = []
-    permission_classes = []
+class RateDownloadJSON(AuthRequiredMixin, View):  # TODO get rid off filtered data
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         queryset = Rate.objects.all().iterator()
@@ -145,3 +147,21 @@ class RateDownloadJSON(View):  # TODO get rid off filtered data
         response['Content-Disposition'] = 'attachment; filename="rates.json"'
 
         return response
+
+
+class DeleteRate(AdminRequiredMixin, DeleteView):
+    model = Rate
+    template_name = 'rate-delete.html'
+    success_url = reverse_lazy('rate:list')
+
+
+class EditRate(AdminRequiredMixin, UpdateView):
+    model = Rate
+    template_name = 'rate-edit.html'
+    fields = (
+        'source',
+        'currency',
+        'buy',
+        'sale',
+    )
+    success_url = reverse_lazy('rate:list')

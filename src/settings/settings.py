@@ -2,11 +2,14 @@ import os
 
 from celery.schedules import crontab
 
+from django.urls import reverse_lazy
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '^ueo-4=t96eio5zjege^ae!0g15^tf2=yey5(360^^=jwl)m*d'
 
-DEBUG = False
+DEBUG = True
+# False # python ./src/manage.py runserver --insecure
 
 ALLOWED_HOSTS = ['*']
 
@@ -111,14 +114,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static/css'),
+    os.path.join(BASE_DIR, 'static'),
 )
 
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
-# CRISPY_TEMPLATE_PACK = 'uni_form'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 CELERY_BROKER_URL = 'amqp://localhost'
@@ -129,3 +131,15 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute='*/15'),
     },
 }
+
+LOGIN_URL = reverse_lazy('account:login')
+LOGIN_REDIRECT_URL = reverse_lazy('index')
+LOGOUT_REDIRECT_URL = reverse_lazy('index')
+
+# EMAIL backend
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
