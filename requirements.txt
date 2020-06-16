@@ -1,4 +1,5 @@
 amqp==2.5.2
+attrs==19.3.0
 backcall==0.1.0
 beautifulsoup4==4.9.1
 billiard==3.6.3.0
@@ -27,14 +28,21 @@ kombu==4.6.8
 lxml==4.5.1
 Markdown==3.2.2
 mccabe==0.6.1
+more-itertools==8.4.0
+packaging==20.4
 parso==0.7.0
 pexpect==4.8.0
 pickleshare==0.7.5
+pluggy==0.13.1
 prompt-toolkit==3.0.5
 ptyprocess==0.6.0
+py==1.8.2
 pycodestyle==2.6.0
 pyflakes==2.2.0
 Pygments==2.6.1
+pyparsing==2.4.7
+pytest==5.4.3
+pytest-django==3.9.0
 python-dateutil==2.8.1
 python-memcached==1.59
 pytz==2020.1

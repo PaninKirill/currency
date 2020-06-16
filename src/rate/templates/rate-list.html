@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load static %}
+{% load staticfiles %}
 
 {% load crispy_forms_tags %}
 
@@ -81,12 +81,12 @@
         {% include 'snippets/pagination.html' %}
     </div>
     <div class="col">
-        <canvas id="myChart" width="400" height="400"></canvas>
+        <canvas id="myChart" width="400" height="500"></canvas>
     </div>
 </div>
 
 {% endblock content %}
 
 {% block extra_js %}
-    <script type="text/javascript" src="{% static 'js/charts.js' %}"></script>
+    <script src="{% static 'js/charts.js' %}"></script>
 {% endblock extra_js %}
