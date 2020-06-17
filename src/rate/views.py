@@ -45,7 +45,7 @@ class RatesList(FilteredRateList):
     paginate_by = 25
 
 
-class ChartData(APIView):
+class ChartData(AuthRequiredMixin, APIView):
     permission_classes = [IsAuthenticated]  # restrictions apply to view data only auth users
 
     def get(self, request):

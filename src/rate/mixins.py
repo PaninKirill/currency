@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
+from django.http import Http404
 
 
 class AuthRequiredMixin(object):
@@ -24,6 +25,8 @@ class AdminRequiredMixin(object):
     normal dispatch. If not, redirect to 403 page.
     """
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise Http404
         if not request.user.is_superuser:
             raise PermissionDenied
 

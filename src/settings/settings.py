@@ -8,10 +8,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '^ueo-4=t96eio5zjege^ae!0g15^tf2=yey5(360^^=jwl)m*d'
 
-DEBUG = True
-# False # python ./src/manage.py runserver --insecure
-
-ALLOWED_HOSTS = ['*']
+DEBUG = False
+ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -136,10 +134,11 @@ LOGIN_URL = reverse_lazy('account:login')
 LOGIN_REDIRECT_URL = reverse_lazy('index')
 LOGOUT_REDIRECT_URL = reverse_lazy('index')
 
-# EMAIL backend
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+FIXTURE_DIRS = (
+   './src/tests/fixtures/',
+)
+
+try:
+    from settings.settings_local import *  # NOQA
+except ImportError:
+    print('ImportError settings_local\n' * 5)  # NOQA
