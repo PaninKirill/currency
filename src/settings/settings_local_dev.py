@@ -1,3 +1,5 @@
+SECRET_KEY = '^ueo-4=t96eio5zjege^ae!0g15^tf2=yey5(360^^=jwl)m*d'
+
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
