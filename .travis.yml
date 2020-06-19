@@ -9,3 +9,4 @@ script:
   - python ./src/manage.py check
   - python ./src/manage.py makemigrations --check --dry-run
   - pip check
+  - pytest ./src/tests -s
