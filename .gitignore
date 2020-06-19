@@ -5,3 +5,7 @@ __pycache__/
 *.pyc
 *.log
 settings_local.py
+test1.py
+test2.py
+test3.py
+test4.py
