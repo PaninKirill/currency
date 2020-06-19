@@ -259,4 +259,4 @@ def test_latest_rates(client):
     assert len(response.context['object_list']) != 0
     assert len(response.context['object_list']) != len(db_rates)
     assert response.context['object_list'][0] in db_rates
-    assert str(response.content).__contains__('<td>USD</td>')
+    assert 'USD' in str(response.content)
