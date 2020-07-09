@@ -31,7 +31,7 @@ def send_signup_email_async(user_id):
     token = account_activation_token.make_token(user)
 
     path = reverse('account:activate', args=(uid, token))
-    url = 'http://127.0.0.1:8000' + path
+    url = 'http://currency-exchange.com' + path
 
     message = f'Your Activation Url: {url}'
     send_mail(

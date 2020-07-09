@@ -12,8 +12,9 @@ DEBUG = False
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
+    'account',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -27,7 +28,6 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # custom
-    'account',
     'rate',
 ]
 
