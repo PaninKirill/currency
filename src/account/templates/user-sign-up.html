@@ -5,21 +5,19 @@
 {% crispy form form.helper 'bootstrap' %}
 
 {% block title %}
-Profile Edit
+Sign Up
 {% endblock title %}
 
 {% block content %}
 
-<h1>Profile Edit</h1>
+<h1>Sign Up</h1>
 <div class="card">
-    <form method="post">
+    <form method="post" action="{% url 'account:sign-up' %}">
         {% csrf_token %}
         {{ form|crispy:"bootstrap" }}
         <br>
         <button class="btn btn-card" type="submit">Send</button>
-        <a href="{% url 'index' %}"><button class="btn btn-card"> Cancel </button></a>
     </form>
-    <a class="nav-item nav-link" href="{% url 'password_change' %}">Change current password</a>
 </div>
 
 {% endblock content %}
