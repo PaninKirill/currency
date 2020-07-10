@@ -11,9 +11,12 @@ SECRET_KEY = '^ueo-4=t96eio5zjege^ae!0g15^tf2=yey5(360^^=jwl)m*d'
 DEBUG = False
 ALLOWED_HOSTS = []
 
+DOMAIN = ''
+
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
+    'account',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -27,7 +30,6 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # custom
-    'account',
     'rate',
 ]
 

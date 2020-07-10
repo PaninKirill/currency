@@ -38,10 +38,10 @@
                     <a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
                 </li>
                 {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Sign Up</a>
+                <li class="nav-item {{ request.path|active:'account:sign-up' }}">
+                    <a class="nav-link" href="{% url 'account:sign-up' %}">Sign Up</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item {{ request.path|active:'account:login' }}">
                     <a class="nav-link" href="{% url 'account:login' %}">Login</a>
                 </li>
                 {% endif %}

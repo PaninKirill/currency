@@ -31,7 +31,7 @@ def django_db_setup(django_db_setup, django_db_blocker):
 @pytest.fixture(scope='session', autouse=True)
 def user():
     username = 'user'
-    password = '1234567'
+    password = '1234567asd'
     email = 'user@mail.com'
     initial_user = User.objects.create(username=username, password=password, email=email)
     initial_user.set_password(password)
