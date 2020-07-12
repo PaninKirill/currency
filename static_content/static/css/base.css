@@ -173,3 +173,9 @@ th {
     padding: 10px;
     background: rgba(53,58,64, 0.01);
 }
+
+.avatar {
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}

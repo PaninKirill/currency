@@ -15,7 +15,7 @@ class AuthRequiredMixin(object):
         if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path(), self.login_url)
 
-        return super(AuthRequiredMixin, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class AdminRequiredMixin(object):
@@ -29,4 +29,4 @@ class AdminRequiredMixin(object):
         if not request.user.is_superuser:
             raise PermissionDenied
 
-        return super(AdminRequiredMixin, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)

@@ -3,8 +3,8 @@ from account.models import User
 from django.contrib import admin
 
 
-class AccountAdmin(admin.ModelAdmin):
-    list_per_page = 25
+class UserAdmin(admin.ModelAdmin):
+    fields = ['email', 'first_name', 'last_name', 'avatar']
 
 
-admin.site.register(User, AccountAdmin)
+admin.site.register(User, UserAdmin)

@@ -2,8 +2,12 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
+def avatar_path(instance, filename):
+    return f'{instance.id}/{filename}'
+
+
 class User(AbstractUser):
-    pass
+    avatar = models.FileField(upload_to=avatar_path, blank=True, null=True)
 
 
 class Contact(models.Model):
