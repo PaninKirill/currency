@@ -16,5 +16,5 @@ urlpatterns = [
         views.Activate.as_view(), name='activate'),
 
     path('users/', views.UserListCreateView.as_view(), name='users'),
-    path('users/<int:pk>/', views.UserReadUpdateDeleteView.as_view(), name='users'),
+    path('users/<int:pk>/', views.UserReadUpdateDeleteView.as_view(), name='user'),
 ]

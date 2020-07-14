@@ -7,11 +7,12 @@ from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView, TemplateView, UpdateView, View
 
+from django_filters import rest_framework as filters
 from django_filters.views import FilterView
 
 from mixins.mixins import AdminRequiredMixin, AuthRequiredMixin
 
-from rate.filters import RateFilter
+from rate.filters import RateFilter, RateFilterAPI
 from rate.models import Rate
 from rate.selectors import get_latest_rates
 from rate.serializers import RateSerializer
@@ -128,6 +129,8 @@ class ChartData(AuthRequiredMixin, APIView):
 class RateListCreateView(AuthRequiredMixin, ListCreateAPIView):
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = RateFilterAPI
 
 
 class RateReadUpdateDeleteView(AdminRequiredMixin, RetrieveUpdateDestroyAPIView):
