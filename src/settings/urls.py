@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.conf.urls import url
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
@@ -19,9 +20,12 @@ urlpatterns = [
 if settings.DEBUG:
     import debug_toolbar
 
-    urlpatterns = [path('__debug__/', include(debug_toolbar.urls)),
-                   url(r'^api-auth/', include('rest_framework.urls'))
-                   ] + urlpatterns
+    urlpatterns.extend([
+        path('__debug__/', include(debug_toolbar.urls)),
+        url(r'^api-auth/', include('rest_framework.urls')),
+    ])
+
+    urlpatterns.extend(static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))
 
 # Custom error pages
 handler404 = handler_views.error_404
