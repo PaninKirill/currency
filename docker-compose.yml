@@ -1,0 +1,104 @@
+version: "3.3"
+
+services:
+  memcached:
+    image: memcached:latest
+    env_file: .env
+    hostname: ${MEMCACHED_HOST}
+    container_name: memcached
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq:3.8-rc-management
+    env_file: .env
+    hostname: ${RABBITMQ_DEFAULT_HOST}
+    container_name: rabbitmq
+    restart: always
+
+  backend:
+    env_file: .env
+    build: .
+    container_name: backend
+    command: ./commands/wsgi/${SERVER}.sh
+    restart: always
+    depends_on:
+      - memcached
+      - rabbitmq
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/srv/project
+
+  celery:
+    env_file: .env
+    build: .
+    container_name: celery
+    command: ./commands/start_celery.sh
+    restart: always
+    depends_on:
+      - memcached
+      - rabbitmq
+    volumes:
+      - ./:/srv/project
+
+  celerybeat:
+    env_file: .env
+    build: .
+    container_name: celerybeat
+    command: ./commands/start_celerybeat.sh
+    restart: always
+    depends_on:
+      - memcached
+      - rabbitmq
+    volumes:
+      - ./:/srv/project
+
+  postgres:
+    image: postgres:12.3-alpine
+    container_name: postgres
+    env_file: .env
+    hostname: ${POSTGRES_HOST}
+    restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  nginx:
+    image: nginx:1.17.4-alpine
+    container_name: nginx
+    volumes:
+      - ./nginx:/etc/nginx/conf.d/
+      - ./static_content:/etc/nginx/static_content/
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+
+  portainer:
+    image: portainer/portainer:1.24.0-alpine
+    container_name: portainer
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+  flower:
+    image: mher/flower:latest
+    container_name: flower
+    command: ./commands/start_flower.sh
+    restart: always
+    ports:
+      - "5555:5555"
+    volumes:
+      - ./:/srv/project
+    depends_on:
+      - rabbitmq
+    environment:
+      CELERY_BROKER_URL: amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@${RABBITMQ_DEFAULT_HOST}:5672
+
+
+volumes:
+  db_data: {}
+  portainer_data: {}
