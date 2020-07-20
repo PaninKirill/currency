@@ -11,3 +11,4 @@ test3.py
 test4.py
 tmp/
 static_content/
+.env

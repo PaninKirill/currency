@@ -1,8 +1,10 @@
 language: python
 python:
   - "3.6"
+env:
+  - SECRET_KEY=*
 before_script:
-  - cp .env.example .env
+  - travis encrypt --pro SECRET_KEY="secretvalue"
 install:
   - pip install -r requirements.txt
 script:
