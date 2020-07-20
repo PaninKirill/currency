@@ -1,7 +1,16 @@
 language: python
 python:
   - "3.6"
+before_script:
+  - cp .env.example .env
 env:
+  - SECRET_KEY=*
+  - EMAIL_HOST_PASSWORD=*
+  - EMAIL_HOST_USER=*
+  - POSTGRES_USER=*
+  - POSTGRES_PASSWORD=*
+  - RABBITMQ_DEFAULT_USER=*
+  - RABBITMQ_DEFAULT_PASS=*
   - SECRET_KEY=*
 install:
   - pip install -r requirements.txt
