@@ -4,7 +4,7 @@ python:
 services:
   - postgresql
 before_script:
-  - psql -c 'create database POSTGRES_DB;' -U POSTGRES_USER
+  - psql -c 'create database travis_ci_test;' -U postgres
 env:
   - RABBITMQ_DEFAULT_USER=*
   - RABBITMQ_DEFAULT_PASS=*
