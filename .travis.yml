@@ -1,6 +1,8 @@
 language: python
 python:
   - "3.6"
+before_script:
+  - psql -c 'create database currency;' -U postgres
 env:
   - RABBITMQ_DEFAULT_USER=*
   - RABBITMQ_DEFAULT_PASS=*
