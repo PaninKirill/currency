@@ -95,6 +95,7 @@ services:
       - ./:/srv/project
     depends_on:
       - rabbitmq
+      - celery
     environment:
       CELERY_BROKER_URL: amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@${RABBITMQ_DEFAULT_HOST}:5672
 
