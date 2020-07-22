@@ -7,13 +7,13 @@ services:
   - postgresql
 before_script:
   - psql -c 'create database currency;' -U postgres
+  - psql -c 'create database rate_rate;' -U postgres
   - sudo -u postgres psql -c "CREATE USER currency WITH PASSWORD 'currency'" -U postgres
   - sudo -u postgres psql -c "ALTER ROLE currency SUPERUSER"
 script:
   - flake8 ./src
   - flake8 ./parse_workua
   - python ./src/manage.py makemigrations --check --dry-run
-  - python ./src/manage.py migrate
   - python ./src/manage.py validate_templates
   - python ./src/manage.py check
   - pip check
