@@ -15,15 +15,3 @@ class RateSerializer(serializers.ModelSerializer):
             'currency',
         ]
 
-
-class ContactSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Rate
-        fields = [
-            'id',
-            'created',
-            'buy',
-            'sale',
-            'source',
-            'currency',
-        ]
