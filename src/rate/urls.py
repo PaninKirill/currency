@@ -13,7 +13,4 @@ urlpatterns = [
     path('download-json/', views.RateDownloadJSON.as_view(), name='download-json'),
     path('rate-edit/<int:pk>', views.EditRate.as_view(), name='edit'),
     path('rate-remove/<int:pk>', views.DeleteRate.as_view(), name='remove'),
-
-    path('rates/', views.RateListCreateView.as_view(), name='rates'),
-    path('rates/<int:pk>/', views.RateReadUpdateDeleteView.as_view(), name='rate'),
 ]

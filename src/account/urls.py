@@ -13,8 +13,6 @@ urlpatterns = [
     path('sign-up/', views.SignUp.as_view(), name='sign-up'),
     re_path(
         r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-        views.Activate.as_view(), name='activate'),
-
-    path('users/', views.UserListCreateView.as_view(), name='users'),
-    path('users/<int:pk>/', views.UserReadUpdateDeleteView.as_view(), name='user'),
+        views.Activate.as_view(), name='activate'
+    ),
 ]
