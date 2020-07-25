@@ -1,6 +1,11 @@
-from account.models import Contact, User
+import os
 
+from account.models import Contact, User
+from account.tasks import send_signup_email_async
+
+from django.conf import settings
 from django.core import mail
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
 
@@ -48,23 +53,23 @@ def test_contact_us_incorrect_payload(client):
     assert len(mail.outbox) == 0
 
 
-def test_contact_us_correct_payload(client, settings):
-    initial_count = Contact.objects.count()
-    assert len(mail.outbox) == 0
+def test_contact_us_correct_payload(client, settings, fake):
+    initial_contact_count = Contact.objects.count()
+    initial_mail_count = len(mail.outbox)
 
     url = reverse('account:contact-us')
     payload = {
-        'email_from': 'mailmail@mail.com',
-        'title': 'hello world',
-        'message': 'hello world' * 50,
+        'email_from': fake.email(),
+        'title': fake.word(),
+        'message': fake.text(),
     }
     response = client.post(url, payload)
     assert response.status_code == 302
-    assert Contact.objects.count() == initial_count + 1
+    assert Contact.objects.count() == initial_contact_count + 1
 
     # check email
-    assert len(mail.outbox) == 1
-    email = mail.outbox[0]
+    assert len(mail.outbox) == initial_mail_count + 1
+    email = mail.outbox[initial_mail_count]
     assert email.subject == payload['title']
     assert email.body == payload['message']
     assert email.from_email == payload['email_from']
@@ -107,6 +112,16 @@ def test_user_profile_edit_correct_payload(client, user):
     assert user.email == payload['email']
     assert user.first_name == payload['first_name']
     assert user.last_name == payload['last_name']
+
+
+def test_avatar_upload(client, user):
+    client.force_login(user)
+    url = reverse('account:my-profile')
+    path = os.path.join(settings.BASE_DIR, 'tests', 'data_fixtures', 'ava3_6D2R1A5.png')
+    avatar = SimpleUploadedFile(path, b'file_content', content_type='image/png')
+    response = client.post(url, data={'avatar': avatar})
+    assert response.status_code == 302
+    assert response['Location'] == reverse('index')
 
 
 def test_login(client, user):
@@ -158,59 +173,109 @@ def test_logout(client, user):
     assert response.status_code == 200
 
 
-def test_signup_correct_payload(client):
+def test_signup_correct_payload(client, fake):
     url = reverse('account:sign-up')
+    initial_mail_count = len(mail.outbox) + 1
     response = client.get(url)
     assert response.status_code == 200
-    response = client.post(
-        url,
-        data={
-            'email': 'test7@test.com',
-            'password1': 'strongpass',
-            'password2': 'strongpass',
-            format: 'json'
-        },
-    )
+    user_email = fake.email()
+    user_password = fake.password()
+    payload = {
+        'email': user_email,
+        'password1': user_password,
+        'password2': user_password,
+    }
+    response = client.post(url, payload)
     assert response.status_code == 302
     assert response['Location'] == reverse('index')
     response = client.post(url, follow=True)
     assert response.status_code == 200
 
+    # generate activation url with token
+    user = User.objects.last()
+    send_signup_email_async(user.id)
+    assert len(mail.outbox) == initial_mail_count + 1
+    email = mail.outbox[initial_mail_count]
+    activation_url = str(email.body).split(' ')[-1]
+    token = str(email.body).split('/')[-2]
+    uidb64 = str(email.body).split('/')[-3]
+    reverse_url = reverse(
+        'account:activate',
+        kwargs={'uidb64': uidb64, 'token': token}
+    )
+    assert activation_url.replace(settings.DOMAIN, '') == reverse_url
 
-def test_signup_incorrect_payload(client):
+    # incorrect token
+    wrong_url = reverse(
+        'account:activate',
+        kwargs={'uidb64': uidb64, 'token': '5id-4e247df6037f9cd240fb'}
+    )
+    response = client.get(settings.DOMAIN + wrong_url)
+    assert response.status_code == 200
+
+    # passing activation url
+    response = client.get(reverse_url)
+    assert response.status_code == 302
+    assert response['Location'] == reverse('account:login')
+
+    # new user first login
+    payload = {
+        'username': user_email,
+        'password': user_password,
+    }
+    response = client.post(response['Location'], payload)
+    assert response.status_code == 302
+    assert response['Location'] == reverse('index')
+    assert user.is_authenticated
+    new_user = User.objects.last()
+    assert new_user.username == user.username
+    assert new_user.is_active
+
+
+def test_signup_activation_stolen_token(client, settings):
+    url = reverse(
+        'account:activate',
+        kwargs={'uidb64': None, 'token': '5id-4e247df6037f9cd240fb'}
+    )
+    response = client.post(settings.DOMAIN + url)
+    assert response.status_code == 404
+
+
+def test_signup_incorrect_payload(client, fake):
     url = reverse('account:sign-up')
     response = client.get(url)
+    user = User.objects.last()
     assert response.status_code == 200
-    response = client.post(
-        url,
-        data={
-            'email': 'test7@test.com',
-            'password1': '',
-            'password2': 'strongpass',
-            format: 'json'
-        },
-    )
+    payload = {
+        'email': user.email,
+        'password1': '',
+        'password2': fake.password(),
+    }
+    response = client.post(url, payload)
     errors = response.context_data['form'].errors
     assert len(errors) == 2
     assert errors['email'] == ['User with given email exists!']
     assert errors['password1'] == ['This field is required.']
+    payload = {
+        'email': fake.email(),
+        'password1': fake.password(),
+        'password2': fake.password(),
+    }
+    response = client.post(url, payload)
+    errors = response.context_data['form'].errors
+    assert len(errors) == 1
+    assert errors['password2'] == ["The two password fields didn't match."]
 
 
 def test_signup_empty_payload(client):
     url = reverse('account:sign-up')
     response = client.get(url)
     assert response.status_code == 200
-    response = client.post(
-        url,
-        data={
-            'email': '',
-            'password1': '',
-            'password2': '',
-            format: 'json'
-        },
-    )
+    payload = None
+    response = client.post(url, payload)
     errors = response.context_data['form'].errors
-    assert len(errors) == 2
+    assert len(errors) == 3
+    assert errors['email'] == ['This field is required.']
     assert errors['password1'] == ['This field is required.']
     assert errors['password2'] == ['This field is required.']
 

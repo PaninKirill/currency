@@ -17,7 +17,6 @@ from rate.selectors import get_latest_rates
 from rate.utils import display
 
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
 
 import xlsxwriter
 
@@ -112,15 +111,6 @@ class FilteredRateList(FilterView):  # TODO  implement initial filter params
 class RatesList(FilteredRateList):
     template_name = 'rate-list.html'
     paginate_by = 25
-
-
-class ChartData(AuthRequiredMixin, APIView):
-    permission_classes = [IsAuthenticated]  # restrictions apply to view data only auth users
-
-    def get(self, request):
-        queryset = Rate.objects.all().iterator()
-        qs_json = serializers.serialize('json', queryset)
-        return HttpResponse(qs_json, content_type='application/json')
 
 
 class LatestRatesView(TemplateView):  # TODO implement indicators to latest update on fields buy/sale (up/down arrows)

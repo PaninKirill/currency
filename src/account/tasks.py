@@ -25,7 +25,7 @@ def send_signup_email_async(user_id):
     from account.models import User
 
     user = User.objects.get(id=user_id)
-    title = 'Sign Up'
+    title = 'Sign Up ' + settings.DOMAIN
 
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = account_activation_token.make_token(user)
