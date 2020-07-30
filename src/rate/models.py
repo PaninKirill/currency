@@ -1,7 +1,4 @@
-from datetime import datetime
-
 from django.db import models
-from django.utils import timezone
 
 from rate import model_choices as mch
 from rate.utils import to_decimal
@@ -29,9 +26,6 @@ class Rate(models.Model):
                f'CCY: {self.get_currency_display()}, ' \
                f'buy: {self.buy}, ' \
                f'sell: {self.sale}'
-
-    def was_changed_recently(self):
-        return self.created >= (timezone.now() - datetime.timedelta(minutes=15))
 
     class Meta:
         get_latest_by = "created"

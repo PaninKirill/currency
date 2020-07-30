@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 from celery.schedules import crontab
 
@@ -29,6 +30,7 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_forms',
     'rest_framework',
+    'drf_yasg',
 
     # custom
     'rate',
@@ -92,15 +94,60 @@ CACHES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+        'rest_framework.permissions.IsAuthenticated',
     ],
-
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
     ],
-
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 50
+}
+
+REST_USE_JWT = True
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+
+    'AUTH_HEADER_TYPES': ('Bearer', 'JWT'),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': True,
+    'JSON_EDITOR': True,
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        },
+        'JWT': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        },
+    },
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -156,7 +203,7 @@ CELERY_BROKER_URL = 'amqp://{0}:{1}@{2}:5672//'.format(
 
 CELERY_BEAT_SCHEDULE = {
     'parse': {
-        'task': 'rate.tasks.parse',
+        'task': 'rate.tasks.parse_tasks',
         'schedule': crontab(minute='*/15'),
     },
 }

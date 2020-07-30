@@ -1,7 +1,5 @@
-from account.filters import UserFilterAPI
 from account.forms import SignUpForm
 from account.models import Contact, User
-from account.serializers import UserSerializer
 from account.tasks import send_email_async
 from account.tokens import account_activation_token
 
@@ -12,12 +10,6 @@ from django.urls import reverse_lazy
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.views.generic import CreateView, UpdateView
-
-from django_filters import rest_framework as filters
-
-from mixins.mixins import AdminRequiredMixin
-
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 
 class ContactUs(CreateView):
@@ -77,15 +69,3 @@ class Activate(UpdateView):
             return redirect('account:login')
         else:
             return render(request, 'account_activation_invalid.html')
-
-
-class UserListCreateView(AdminRequiredMixin, ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = UserFilterAPI
-
-
-class UserReadUpdateDeleteView(AdminRequiredMixin, RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer

@@ -12,3 +12,4 @@ test4.py
 tmp/
 static_content/
 .env
+.coverage

@@ -7,20 +7,16 @@ from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView, TemplateView, UpdateView, View
 
-from django_filters import rest_framework as filters
 from django_filters.views import FilterView
 
 from mixins.mixins import AdminRequiredMixin, AuthRequiredMixin
 
-from rate.filters import RateFilter, RateFilterAPI
+from rate.filters import RateFilter
 from rate.models import Rate
 from rate.selectors import get_latest_rates
-from rate.serializers import RateSerializer
 from rate.utils import display
 
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
 
 import xlsxwriter
 
@@ -115,27 +111,6 @@ class FilteredRateList(FilterView):  # TODO  implement initial filter params
 class RatesList(FilteredRateList):
     template_name = 'rate-list.html'
     paginate_by = 25
-
-
-class ChartData(AuthRequiredMixin, APIView):
-    permission_classes = [IsAuthenticated]  # restrictions apply to view data only auth users
-
-    def get(self, request):
-        queryset = Rate.objects.all().iterator()
-        qs_json = serializers.serialize('json', queryset)
-        return HttpResponse(qs_json, content_type='application/json')
-
-
-class RateListCreateView(AuthRequiredMixin, ListCreateAPIView):
-    queryset = Rate.objects.all()
-    serializer_class = RateSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = RateFilterAPI
-
-
-class RateReadUpdateDeleteView(AdminRequiredMixin, RetrieveUpdateDestroyAPIView):
-    queryset = Rate.objects.all()
-    serializer_class = RateSerializer
 
 
 class LatestRatesView(TemplateView):  # TODO implement indicators to latest update on fields buy/sale (up/down arrows)
