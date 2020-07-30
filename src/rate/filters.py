@@ -60,6 +60,7 @@ class RateFilterAPI(RateFilter, FilterSet):
     class Meta:
         model = Rate
         fields = [
+            'id',
             'buy',
             'sale',
         ]

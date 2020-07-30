@@ -78,7 +78,6 @@ def test_permissions_not_auth(client):
         'rate:download-csv',
         'rate:download-xlsx',
         'rate:download-json',
-        'rate:api',
     )
     for url in urls:
         response = client.get(reverse(url))
@@ -91,7 +90,6 @@ def test_permissions_auth(client, user):
         'rate:download-csv',
         'rate:download-xlsx',
         'rate:download-json',
-        'rate:api',
     )
     for url in urls:
         response = client.get(reverse(url))

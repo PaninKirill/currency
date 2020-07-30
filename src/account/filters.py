@@ -1,4 +1,4 @@
-from account.models import User
+from account.models import Contact, User
 
 from django_filters import BaseInFilter, BooleanFilter, DateTimeFromToRangeFilter
 from django_filters.rest_framework import FilterSet
@@ -24,4 +24,16 @@ class UserFilterAPI(FilterSet):
             'email': ['icontains'],
             'first_name': ['icontains'],
             'last_name': ['icontains'],
+        }
+
+
+class ContactFilterAPI(FilterSet):
+    class Meta:
+        model = Contact
+        fields = {
+            'created': ['range'],
+            'id': ['exact'],
+            'email_from': ['icontains'],
+            'title': ['icontains'],
+            'message': ['icontains'],
         }

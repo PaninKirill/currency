@@ -24,3 +24,9 @@ def days_between(d1, d2):
     if not isinstance(d2, datetime):
         d2 = datetime.strptime(d2, "%d.%m.%Y %H:%M")
     return abs((d2 - d1).days)
+
+
+def list_to_queryset(model, data):
+    pk_list = [obj.pk for obj in data]
+
+    return model.objects.filter(pk__in=pk_list)
