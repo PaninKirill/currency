@@ -68,7 +68,7 @@ services:
     volumes:
       - ./nginx:/etc/nginx/conf.d/
       - ./static_content:/etc/nginx/static_content/
-      - /etc/apache2/:/etc/apache2/
+      - ./nginx/.htpasswd:/etc/nginx/conf.d/.htpasswd
     ports:
       - "80:80"
       - "443:443"

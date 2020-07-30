@@ -1,0 +1,181 @@
+body {
+    padding-top: 60px;
+    padding-bottom: 60px;
+    background-color: white;
+    font-size: 12px;
+}
+
+h1  {
+    color: black;
+    font-family: 'Teko';
+    text-align: center;
+    font-size: 18pt;
+}
+
+label {
+    padding: 0px;
+    margin: 0px;
+    font-size: 12px;
+    color: orange;
+}
+
+.btn-primary {
+    background-color: #353a40;
+    border: none;
+    color: #ffffff;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    border-radius: 3px;
+    padding: 6px 20px;
+}
+
+.btn-primary:hover {
+    background-color: blue;
+    transition-duration: 0.3s;
+    color: white;
+    box-shadow: 0 4px 8px 0 rgba(36,36,173,0.5), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.btn-table {
+    background-color: #353a40;
+    border: none;
+    color: #ffffff;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+    border-radius: 3px;
+    padding: 3px 10px;
+}
+
+.btn-table:hover {
+    background-color: blue;
+    transition-duration: 0.3s;
+    color: white;
+    box-shadow: 0 4px 8px 0 rgba(36,36,173,0.5), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.btn-card {
+    background-color: #353a40;
+    border: 1px solid white;
+    color: #ffffff;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    border-radius: 3px;
+    padding: 4px 18px;
+}
+
+.btn-card:hover {
+    background-color: green;
+    transition-duration: 0.3s;
+    color: white;
+    box-shadow: 0 4px 8px 0 rgba(36,36,173,0.5), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+td {
+    text-align: center;
+    padding: 8px;
+    border: 1px solid #fff;
+}
+
+tr:nth-child(even){
+    background-color: #ebffff;
+}
+
+.table-striped>tbody>tr:nth-child(odd)>td {
+   background-color: #d2fcfc;
+}
+
+th {
+    background-color: #353a40;
+    padding: 8px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    box-shadow: 0 2px 4px 0 rgba(36,36,173,0.5), 0 6px 10px 0 rgba(0,0,0,0.19);
+    border-bottom: 1px solid orange;
+}
+
+#table-action-field {
+    width:100px;
+    text-align:center;
+}
+
+.form-control {  /* filter */
+   font-size: 12px;
+   background-clip: padding-box;
+   height: 30px;
+}
+
+.datetimepicker-input {
+   font-size: 12px;
+   background-clip: padding-box;
+   height: 30px;
+   width: 220px;
+   display: inline;
+}
+
+.navbar-expand-lg  {
+    box-shadow: 0 2px 4px 0 rgba(36,36,173,0.5), 0 2px 4px 0 rgba(0,0,0,0.19);
+    border-bottom: 1px solid orange;
+}
+
+.dropdown-menu {
+    background-color: #353a40;
+    box-shadow: 0 2px 4px 0 rgba(36,36,173,0.5), 0 6px 10px 0 rgba(0,0,0,0.19);
+    font-size: 12px;
+    border-bottom: 1px solid orange;
+}
+
+.dropdown-item {
+     color: orange
+}
+
+.page-link {
+    padding: 4px;
+    color: black;
+    border-bottom: 1px solid orange;
+}
+
+.page-link:hover {
+    background-color: rgba(255,132,0,0.5);
+    transition-duration: 0.3s;
+    color: white;
+    box-shadow: 0 2px 2px 0 rgba(36,36,173,0.2), 0 2px 2px 0 rgba(0,0,0,0.19);
+}
+
+.page-item.active .page-link{
+    z-index:3;
+    color:#fff;
+    background-color: rgb(53, 58, 64,0.8);
+    border-bottom: 1px solid orange;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 17px;
+    border-top: 1px solid orange;
+    background-color: #353a40;
+    box-shadow: 0px 0px 2px 4px rgba(36,36,173,0.2), 0px 12px 2px 4px rgba(0,0,0,0.19);
+    color: white;
+    text-align: center;
+}
+
+.card {
+    text-align: center;
+    vertical-align: middle;
+    margin: auto;
+    width: 40%;
+    padding: 10px;
+    background: rgba(53,58,64, 0.01);
+}
+
+.avatar {
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}
