@@ -244,7 +244,7 @@ def parse_pivdenniy():
 
 
 @shared_task
-def parse():
+def parse_tasks():
     parse_monobank.delay()
     parse_privatbank.delay()
     parse_vkurse.delay()

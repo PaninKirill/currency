@@ -1,7 +1,10 @@
 from account.models import User
 
+from django.core.cache import cache
 from django.core.management import call_command
 from django.urls import reverse
+
+from faker import Faker
 
 import pytest
 
@@ -58,9 +61,20 @@ def user():
     email = 'user@mail.com'
     initial_user = User.objects.create(username=username, password=password, email=email)
     initial_user.set_password(password)
-    initial_user.is_active = True
     initial_user.save()
 
     initial_user.raw_password = password
 
     yield initial_user
+
+
+@pytest.fixture(scope='session')
+def fake():
+    yield Faker()
+
+
+@pytest.fixture(scope='session', autouse=True)
+def clear_session():
+    cache.clear()
+    yield
+    cache.clear()
