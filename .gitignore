@@ -4,11 +4,6 @@ __pycache__/
 *.sqlite3
 *.pyc
 *.log
-test.py
-test1.py
-test2.py
-test3.py
-test4.py
 tmp/
 static_content/
 .env
