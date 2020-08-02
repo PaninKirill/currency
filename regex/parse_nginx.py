@@ -11,9 +11,8 @@ regex = re.compile(
     r'(?P<host>.*?)\"\s(?P<exec_time>.*)'
 )
 
-HEADERS = (
-    'index',
-    'id',
+FIELDS = (
+    'ip',
     'date',
     'method',
     'path',
@@ -29,37 +28,14 @@ RESULT = []
 
 with open(PATH) as file:
     with open('nginx_logs.csv', 'w') as f:
-        w = csv.writer(f, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        w.writerow(HEADERS)
+        w = csv.DictWriter(f, fieldnames=FIELDS)
+        w.writeheader()
         for index, line in enumerate(file):
             res = regex.search(line)
             if res is not None:
-                res.groupdict()
-                index = index
-                ip = res['ip']
-                date = res['date']
-                method = res['method']
-                path = res['path']
-                status_code = res['status_code']
-                body_bytes_sent = res['body_bytes_sent']
-                http_referer = res['http_referer']
-                ua = res['ua']
-                host = res['host']
-                exec_time = res['exec_time']
-                w.writerow((
-                    index,
-                    ip,
-                    date,
-                    method,
-                    path,
-                    status_code,
-                    body_bytes_sent,
-                    http_referer,
-                    ua,
-                    host,
-                    exec_time,
-                ))
-                RESULT.append((ip, path))
+                data = res.groupdict()
+                w.writerow(data)
+                RESULT.append((data['ip'], data['path']))
 
 print(collections.Counter(RESULT).most_common(10))
 
@@ -86,8 +62,7 @@ regex = re.compile(
 
 RESULT_ERROR = []
 
-HEADERS_ERROR = (
-    'index',
+FIELDS_ERROR = (
     'datetime',
     'error_level',
     'process_id',
@@ -104,41 +79,14 @@ HEADERS_ERROR = (
 
 with open(PATH) as file:
     with open('nginx_logs_errors.csv', 'w') as f:
-        w = csv.writer(f, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        w.writerow(HEADERS_ERROR)
+        w = csv.DictWriter(f, fieldnames=FIELDS_ERROR)
+        w.writeheader()
         for index, line in enumerate(file):
             res = regex.search(line)
             if res is not None:
-                res.groupdict()
-                datetime = res['datetime']
-                error_level = res['error_level']
-                process_id = res['process_id']
-                connection_id = res['connection_id']
-                message = res['message']
-                client = res['client']
-                server = res['server']
-                method = res['method']
-                path = res['path']
-                upstream = res['upstream']
-                host = res['host']
-                referrer = res['referrer']
-                w.writerow((
-                    index,
-                    datetime,
-                    error_level,
-                    process_id,
-                    connection_id,
-                    message,
-                    client,
-                    server,
-                    method,
-                    path,
-                    upstream,
-                    host,
-                    referrer
-                ))
-
-                RESULT_ERROR.append(message)
+                data = res.groupdict()
+                w.writerow(data)
+                RESULT_ERROR.append(data['message'])
 
 print(collections.Counter(RESULT_ERROR).most_common(10))
 
