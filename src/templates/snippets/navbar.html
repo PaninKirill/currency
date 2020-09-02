@@ -1,21 +1,21 @@
 {% load active_tab %}
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
     <div class="container">
-        <a class="navbar-brand" href="{% url 'index' %}"></a>
+        <ul class="navbar-nav ml-auto">
+        <li class="navbar-brand {{ request.path|active:'index' }}">
+            <a class="nav-link" href="{% url 'index' %}"><span class="glyphicon glyphicon-home"></span></a>
+        </li>
+        </ul>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item {{ request.path|active:'index' }}">
-                    <a class="nav-link" href="{% url 'index' %}">Home
-                        <span class="sr-only">(current)</span>
-                    </a>
-                </li>
                 <li class="nav-item {{ request.path|active:'account:contact-us' }}">
-                <a class="nav-link" href="{% url 'account:contact-us' %}">Contact Us</a>
+                <a class="nav-link" href="{% url 'account:contact-us' %}"> Contact Us</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
@@ -36,12 +36,18 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'account:logout' %}">Logout ({{ user.username }})</a>
                 </li>
+                {% if request.user.avatar %}
+                <li class="nav-item">
+                    <img class="rounded-circle z-depth-0" src="{{user.avatar.url}}"
+                        alt="avatar image" height="47">
+                </li>
+                {% endif %}
                 {% else %}
                 <li class="nav-item {{ request.path|active:'account:sign-up' }}">
-                    <a class="nav-link" href="{% url 'account:sign-up' %}">Sign Up</a>
+                    <a class="nav-link" href="{% url 'account:sign-up' %}">Sign Up <span class="glyphicon glyphicon-user"></span>  </a>
                 </li>
                 <li class="nav-item {{ request.path|active:'account:login' }}">
-                    <a class="nav-link" href="{% url 'account:login' %}">Login</a>
+                    <a class="nav-link" href="{% url 'account:login' %}"> Login <span class="glyphicon glyphicon-log-in"></span> </a>
                 </li>
                 {% endif %}
             </ul>
