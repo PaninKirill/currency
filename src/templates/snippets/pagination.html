@@ -17,26 +17,27 @@
                     <a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ query_params }}">next</a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link"
+                    <a class="page-item"
                        href="?page={{ page_obj.paginator.num_pages }}{% if query_params %}&{{ query_params }}{% endif %}">last
                         &raquo;</a>
                 </li>
                 {% endif %}
             </ul>
         </div>
-        <div class="col-md-6">
+
+    </div>
+    <div class="col-md-6">
             <form class="form-inline" method="get">
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
-                        <input class="page-link" placeholder="page number" type="number" name="page" min="1"
+                        <input class="page-link" placeholder="page #" type="number" name="page" min="1"
                                max="{{page_obj.paginator.num_pages }}"/>
                     </li>
-                    <input type="hidden" name="{% if query_params %}&{{ query_params }}{% endif %}"/>
+                        <input type="hidden" name="{% if query_params %}&{{ query_params }}{% endif %}"/>
                     <li class="page-item">
                         <input class="page-link" type="submit" value="Go"/>
                     </li>
                 </ul>
             </form>
         </div>
-    </div>
 </div>

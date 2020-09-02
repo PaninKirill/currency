@@ -79,8 +79,9 @@ def test_permissions_not_auth(client):
         'rate:download-xlsx',
         'rate:download-json',
     )
+    query_params = 'ordering=-created&created_after=2020-07-19&created_before=2020-07-19&source=&currency='
     for url in urls:
-        response = client.get(reverse(url))
+        response = client.get(reverse(url, kwargs={'query_params': query_params}))
         assert response.status_code == 302
 
 
@@ -91,23 +92,42 @@ def test_permissions_auth(client, user):
         'rate:download-xlsx',
         'rate:download-json',
     )
+    query_params = 'ordering=-created&created_after=2020-07-19&created_before=2020-07-19&source=&currency='
     for url in urls:
-        response = client.get(reverse(url))
+        response = client.get(reverse(url, kwargs={'query_params': query_params}))
         assert response.status_code == 200
 
 
 def test_rate_download_csv(client, user):
     client.login(username=user.username, password=user.raw_password)
-    url = reverse('rate:download-csv')
+    query_params = 'ordering=-created&created_after=&created_before=&source=&currency='
+    url = reverse('rate:download-csv', kwargs={'query_params': query_params})
     response = client.get(url)
+    assert response.status_code == 200
+    assert response._headers['content-type'] == ('Content-Type', 'text/csv')
 
+    # empty query params
+    query_params = ''
+    url = reverse('rate:download-csv', kwargs={'query_params': query_params})
+    response = client.get(url)
     assert response.status_code == 200
     assert response._headers['content-type'] == ('Content-Type', 'text/csv')
 
 
 def test_rate_download_xlsx(client, user):
     client.login(username=user.username, password=user.raw_password)
-    url = reverse('rate:download-xlsx')
+    query_params = 'ordering=&created_after=2020-07-19&created_before=2020-07-21&source=&currency='
+    url = reverse('rate:download-xlsx', kwargs={'query_params': query_params})
+    response = client.get(url)
+    assert response.status_code == 200
+    assert response._headers['content-type'] == (
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+
+    # empty query params
+    query_params = ''
+    url = reverse('rate:download-xlsx', kwargs={'query_params': query_params})
     response = client.get(url)
     assert response.status_code == 200
     assert response._headers['content-type'] == (
@@ -118,7 +138,18 @@ def test_rate_download_xlsx(client, user):
 
 def test_rate_download_json(client, user):
     client.login(username=user.username, password=user.raw_password)
-    url = reverse('rate:download-json')
+    query_params = 'ordering=-created&created_after=2020-07-19&created_before=2020-07-21&source=&currency='
+    url = reverse('rate:download-json', kwargs={'query_params': query_params})
+    response = client.get(url)
+    assert response.status_code == 200
+    assert response._headers['content-type'] == (
+        'Content-Type',
+        'application/json'
+    )
+
+    # empty query params
+    query_params = ''
+    url = reverse('rate:download-json', kwargs={'query_params': query_params})
     response = client.get(url)
     assert response.status_code == 200
     assert response._headers['content-type'] == (

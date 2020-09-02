@@ -28,17 +28,20 @@
         </div>
         <div class="form-group col-md-1 mb-2">
             &ensp;&ensp;&ensp;
-            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search </button>
         </div>
     </div>
 </form>
 
 {% if request.user.is_authenticated %}
 <div id="rates-download">
-    <i>Download Rates:</i>
-    <a href="{% url 'rate:download-csv' %}">csv</a>
-    <a href="{% url 'rate:download-xlsx' %}">xlsx</a>
-    <a href="{% url 'rate:download-json' %}">json</a>
+    <b id="download">Download:</b>
+    <a href="{% url 'rate:download-csv' query_params %}" download>
+        <img src="{% static 'images/csv.png' %}" alt="csv" width="30" height="auto"></a>
+    <a href="{% url 'rate:download-xlsx' query_params %}" download>
+        <img src="{% static 'images/xls.png' %}" alt="xlsx" width="30" height="auto"></a>
+    <a href="{% url 'rate:download-json' query_params %}" download>
+        <img src="{% static 'images/json.png' %}" alt="json" width="30" height="auto"></a>
 </div>
 {% endif %}
 <div class="row">
@@ -71,18 +74,20 @@
                 <td>{{ rate.sale }}</td>
                 {% if request.user.is_superuser %}
                 <td id="table-action-field">
-                    <a href="{% url 'rate:edit' pk=rate.id %}"><button class="btn btn-table"> edit </button></a>
-                    <a href="{% url 'rate:remove' pk=rate.id %}"><button class="btn btn-table"> delete </button></a>
+                    <a href="{% url 'rate:edit' pk=rate.id %}"><button class="btn btn-table">
+                        <span class="glyphicon glyphicon-edit"></span> </button></a>
+                    <a href="{% url 'rate:remove' pk=rate.id %}"><button class="btn btn-table">
+                        <span class="glyphicon glyphicon-trash"></span> </button></a>
                 </td>
                 {% endif %}
             </tr>
             {% endfor %}
         </table>
-        {% include 'snippets/pagination.html' %}
     </div>
     <div class="col">
         <canvas id="myChart" width="400" height="500"></canvas>
     </div>
+    {% include 'snippets/pagination.html' %}
 </div>
 
 {% endblock content %}

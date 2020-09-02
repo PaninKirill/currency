@@ -1,5 +1,6 @@
 from datetime import datetime
 from decimal import Decimal
+from urllib.parse import parse_qsl
 
 
 def to_decimal(num) -> Decimal:
@@ -22,3 +23,18 @@ def list_to_queryset(model, data):
     pk_list = [obj.pk for obj in data]
 
     return model.objects.filter(pk__in=pk_list)
+
+
+def parse_query_params(query_params):
+    filter_params = parse_qsl(query_params)
+    filters = dict(filter_params)
+    if 'created_after' in filters.keys():
+        filters['created__gte'] = filters.pop('created_after')
+    if 'created_before' in filters.keys():
+        filters['created__lte'] = filters.pop('created_before')
+    if 'ordering' in filters.keys():
+        ordering = filters.pop('ordering')
+    else:
+        ordering = '-created'
+
+    return filters, ordering

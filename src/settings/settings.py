@@ -1,4 +1,7 @@
 import os
+
+import socket
+
 from datetime import timedelta
 
 from celery.schedules import crontab
@@ -189,9 +192,8 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'static_content', 'media')
 
-INTERNAL_IPS = [
-    '127.0.0.1',
-]
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS = [ip[:-1] + '1' for ip in ips] + ['127.0.0.1', '::1', 'localhost']
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

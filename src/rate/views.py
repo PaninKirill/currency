@@ -1,4 +1,5 @@
 import csv
+import json
 from io import BytesIO
 from urllib.parse import urlencode
 
@@ -14,26 +15,22 @@ from mixins.mixins import AdminRequiredMixin, AuthRequiredMixin
 from rate.filters import RateFilter
 from rate.models import Rate
 from rate.selectors import get_latest_rates
-from rate.utils import display
+from rate.utils import display, parse_query_params
 
 from rest_framework.permissions import IsAuthenticated
 
 import xlsxwriter
 
 
-class FilteredRateList(FilterView):  # TODO  implement initial filter params
+class FilteredRateList(FilterView):
     filterset_class = RateFilter
-
-    def get_queryset(self, *args, **kwargs):
-        queryset = Rate.objects.all().order_by('created')
-        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         query_params = dict(self.request.GET.items())
         if 'page' in query_params:
-            del query_params['page']
+            query_params.pop('page')
         context['query_params'] = urlencode(query_params)
 
         charts_data = {
@@ -72,8 +69,8 @@ class FilteredRateList(FilterView):  # TODO  implement initial filter params
 
         # Making charts data pattern with empty values, but with keys to call in later
         for item in self.object_list:
-            chart_sources = [_['source'] for _ in charts_data['datasets']]
-            chart_currencies = [_['currency'] for _ in charts_data['datasets']]
+            chart_sources = [s['source'] for s in charts_data['datasets']]
+            chart_currencies = [c['currency'] for c in charts_data['datasets']]
             if item.get_source_display() not in chart_sources \
                     or item.get_currency_display() not in chart_currencies:
                 # separate currency type to buy/sale
@@ -102,15 +99,15 @@ class FilteredRateList(FilterView):  # TODO  implement initial filter params
                             if not item.sale == 0:
                                 values['data'].append(str(item.sale))
             charts_data['labels'].append(item.created.strftime("%d.%m.%Y %H:%M"))
-
-        context['charts_data'] = charts_data
+        charts_data_json = json.dumps(charts_data, indent=4)
+        context['charts_data'] = charts_data_json
 
         return context
 
 
 class RatesList(FilteredRateList):
     template_name = 'rate-list.html'
-    paginate_by = 25
+    paginate_by = 20
 
 
 class LatestRatesView(TemplateView):  # TODO implement indicators to latest update on fields buy/sale (up/down arrows)
@@ -124,7 +121,7 @@ class LatestRatesView(TemplateView):  # TODO implement indicators to latest upda
         return context
 
 
-class RateDownloadCSV(AuthRequiredMixin, View):  # TODO get rid off filtered data
+class RateDownloadCSV(AuthRequiredMixin, View):
     HEADERS = (
         'id',
         'created',
@@ -134,13 +131,17 @@ class RateDownloadCSV(AuthRequiredMixin, View):  # TODO get rid off filtered dat
         'currency',
     )
 
-    def get(self, request):
-        queryset = Rate.objects.all().iterator()
+    def get(self, request, query_params):
+        if not query_params:
+            queryset = Rate.objects.all().iterator()
+        else:
+            filters, ordering = parse_query_params(query_params)
+            queryset = Rate.objects.filter(**filters).order_by(ordering)
+
         response = self.get_response()
 
         writer = csv.writer(response)
         writer.writerow(self.__class__.HEADERS)
-
         for rate in queryset:
             values = []
             for attr in self.__class__.HEADERS:
@@ -156,7 +157,7 @@ class RateDownloadCSV(AuthRequiredMixin, View):  # TODO get rid off filtered dat
         return response
 
 
-class RateDownloadXLSX(AuthRequiredMixin, View):  # TODO get rid off filtered data
+class RateDownloadXLSX(AuthRequiredMixin, View):
     HEADERS = (
         'id',
         'created',
@@ -166,9 +167,14 @@ class RateDownloadXLSX(AuthRequiredMixin, View):  # TODO get rid off filtered da
         'currency',
     )
 
-    def get(self, request):
+    def get(self, request, query_params):
+        if not query_params:
+            queryset = Rate.objects.all().iterator()
+        else:
+            filters, ordering = parse_query_params(query_params)
+            queryset = Rate.objects.filter(**filters).order_by(ordering)
+
         output = BytesIO()
-        queryset = Rate.objects.all().iterator()
 
         workbook = xlsxwriter.Workbook(output)
         worksheet = workbook.add_worksheet("rates")
@@ -194,11 +200,16 @@ class RateDownloadXLSX(AuthRequiredMixin, View):  # TODO get rid off filtered da
         return response
 
 
-class RateDownloadJSON(AuthRequiredMixin, View):  # TODO get rid off filtered data
+class RateDownloadJSON(AuthRequiredMixin, View):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        queryset = Rate.objects.all().iterator()
+    def get(self, request, query_params):
+        if not query_params:
+            queryset = Rate.objects.all().iterator()
+        else:
+            filters, ordering = parse_query_params(query_params)
+            queryset = Rate.objects.filter(**filters).order_by(ordering)
+
         qs_json = serializers.serialize('json', queryset)
 
         response = HttpResponse(qs_json, content_type='application/json')
