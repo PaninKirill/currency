@@ -23,12 +23,18 @@
         <div class="form-group col-md-2 mb-2">
             {{ filter.form.source|as_crispy_field:"bootstrap" }}
         </div>
-        <div class="form-group col-md-2 mb-2">
+        <div class="form-group col-md-1 mb-2">
             {{ filter.form.currency|as_crispy_field:"bootstrap" }}
         </div>
         <div class="form-group col-md-1 mb-2">
             &ensp;&ensp;&ensp;
-            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search </button>
+            <button type="submit" class="btn btn-filter">
+                <span class="glyphicon glyphicon-search"></span> Search</button>
+        </div>
+        <div class="form-group col-md-1 mb-2">
+            &ensp;
+            <a href="{% url 'rate:list' %}" class="btn btn-filter">
+                <span class="glyphicon glyphicon-remove" ></span> Cancel</a>
         </div>
     </div>
 </form>
@@ -41,7 +47,7 @@
     <a href="{% url 'rate:download-xlsx' query_params %}" download>
         <img src="{% static 'images/xls.png' %}" alt="xlsx" width="30" height="auto"></a>
     <a href="{% url 'rate:download-json' query_params %}" download>
-        <img src="{% static 'images/json.png' %}" alt="json" width="30" height="auto"></a>
+        <img src="{% static 'images/json.png' %}" alt="json" aria-placeholder="JSON" width="30" height="auto"></a>
 </div>
 {% endif %}
 <div class="row">
@@ -93,5 +99,8 @@
 {% endblock content %}
 
 {% block extra_js %}
-    <script src="{% static 'js/charts.js' %}"></script>
+<script>
+    let charts_data = {{ charts_data|safe }}
+</script>
+<script src="{% static 'js/charts.js' %}"></script>
 {% endblock extra_js %}

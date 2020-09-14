@@ -6,32 +6,48 @@ from rate import model_choices as mch
 from rate.models import Rate
 
 
-def rate_cache_key(source, currency) -> str:
+def rate_cache_latest(source, currency) -> str:
     return hashlib.md5(
         f'LATEST_RATES_{source}_{currency}'.encode()
     ).hexdigest()
 
 
-def get_latest_rates() -> list:
-    object_list = []
+def rate_cache_prior(source, currency) -> str:
+    return hashlib.md5(
+        f'PRIOR_RATES_{source}_{currency}'.encode()
+    ).hexdigest()
+
+
+def get_latest_rates() -> tuple:
+    latest_rates = []
+    prior_rates = []
     for source in mch.SOURCE_CHOICES:  # source
         source = source[0]
         for currency in mch.CURRENCY_CHOICES:  # currency
             currency = currency[0]
 
-            key = rate_cache_key(source, currency)
-            cached_rate = cache.get(key)
+            key_latest = rate_cache_latest(source, currency)
+            cached_latest = cache.get(key_latest)
+
+            key_prior = rate_cache_prior(source, currency)
+            cached_prior = cache.get(key_prior)
 
             # no rate in cache
-            if cached_rate is None:
-                rate = Rate.objects.filter(
-                    source=source,
-                    currency=currency,
-                ).order_by('created').last()
-                if rate is not None:
-                    cache.set(key, rate, 30)
-                    object_list.append(rate)
+            if cached_latest is None:
+                try:
+                    latest, prior = Rate.objects.filter(
+                        source=source,
+                        currency=currency,
+                    ).order_by('-created')[:2]
+                except ValueError:  # exception occurs if currency not bound to source (only PB has BTC)
+                    continue
+                if latest is not None:
+                    cache.set(key_latest, latest, 30)
+                    latest_rates.append(latest)
+                    cache.set(key_prior, prior, 30)
+                    prior_rates.append(prior)
             else:  # value in cache
-                object_list.append(cached_rate)
+                latest_rates.append(cached_latest)
+                prior_rates.append(cached_prior)
 
-    return object_list
+    return latest_rates, prior_rates

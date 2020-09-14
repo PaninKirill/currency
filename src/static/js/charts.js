@@ -1,8 +1,8 @@
 $(document).ready(function(){
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
+    let ctx = document.getElementById('myChart').getContext('2d');
+    let myChart = new Chart(ctx, {
         type: 'line',
-        data: {{ charts_data|safe }},
+        data: charts_data,
         options: {
         legend: {
             display: true,

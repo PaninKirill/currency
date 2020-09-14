@@ -70,13 +70,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'settings.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -192,8 +185,12 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'static_content', 'media')
 
-hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-INTERNAL_IPS = [ip[:-1] + '1' for ip in ips] + ['127.0.0.1', '::1', 'localhost']
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: False if request.is_ajax() else True,
+}
+
+my_ip = socket.gethostbyname(socket.gethostname())
+INTERNAL_IPS = [ip[:-1] + '1' for ip in my_ip] + ['127.0.0.1', '10.0.2.2']
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

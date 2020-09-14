@@ -4,6 +4,8 @@
 
 {% load crispy_forms_tags %}
 
+{% load subtract_tab %}
+
 {% block title %} Latest rates {% endblock title %}
 
 {% block content %}
@@ -19,24 +21,39 @@
                 <th>Buy</th>
                 <th>Sale</th>
             </tr>
-            {% for rate in object_list %}
+            {% for latest, prior in rates %}
             <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ rate.created }}</td>
-                <td>{{ rate.get_source_display }}</td>
-                <td>{{ rate.get_currency_display }}</td>
-                <td>{{ rate.buy }}</td>
-                <td>{{ rate.sale }}</td>
+                <td>{{ latest.created }}</td>
+                <td>{{ latest.get_source_display }}</td>
+                <td>{{ latest.get_currency_display }}</td>
+                {% if latest.buy|subtract:prior.buy > 0 %}
+                <td>{{ latest.buy }} <sup class="latest-rates-delta-up"> +{{ latest.buy|subtract:prior.buy }} </sup></td>
+                {% elif latest.buy|subtract:prior.buy < 0 %}
+                <td>{{ latest.buy }} <sub class="latest-rates-delta-down"> {{ latest.buy|subtract:prior.buy }} </sub></td>
+                {% elif latest.buy|subtract:prior.buy == 0 %}
+                <td class="latest-rates-delta-0">{{ latest.buy }}</td>
+                {% endif %}
+                {% if latest.sale|subtract:prior.sale > 0 %}
+                <td>{{ latest.sale }} <sup class="latest-rates-delta-up"> +{{ latest.sale|subtract:prior.sale }} </sup> </td>
+                {% elif latest.sale|subtract:prior.sale < 0 %}
+                <td>{{ latest.sale }} <sub class="latest-rates-delta-down"> {{ latest.sale|subtract:prior.sale }} </sub></td>
+                {% elif latest.sale|subtract:prior.sale == 0 %}
+                <td class="latest-rates-delta-0">{{ latest.sale }}</td>
+                {% endif %}
             </tr>
             {% endfor %}
         </table>
     </div>
     <div class="col">
-        <canvas id="myChart" width="400" height="400"></canvas>
+        <canvas id="myChart" width="400" height="500"></canvas>
     </div>
 </div>
 {% endblock content %}
 
 {% block extra_js %}
-    <script src="{% static 'js/charts-latest.js' %}"></script>
+<script>
+    let charts_data = {{ charts_data|safe }}
+</script>
+<script src="{% static 'js/charts-latest.js' %}"></script>
 {% endblock extra_js %}
