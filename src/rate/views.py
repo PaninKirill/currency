@@ -15,7 +15,7 @@ from mixins.mixins import AdminRequiredMixin, AuthRequiredMixin
 from rate.filters import RateFilter
 from rate.models import Rate
 from rate.selectors import get_latest_rates
-from rate.utils import display, parse_query_params
+from rate.utils import display, parse_query_params, rate_charts
 
 from rest_framework.permissions import IsAuthenticated
 
@@ -33,72 +33,7 @@ class FilteredRateList(FilterView):
             query_params.pop('page')
         context['query_params'] = urlencode(query_params)
 
-        charts_data = {
-            'labels': [],
-            'datasets': [],
-        }
-
-        chart_style = {
-            'borderColor': "rgba(75,192,192,1)",
-            'borderCapStyle': 'butt',
-            'borderDash': [],
-            'borderDashOffset': 0.0,
-            'borderJoinStyle': 'miter',
-            'pointBorderColor': "rgba(75,192,192,1)",
-            'pointBackgroundColor': "#fff",
-            'pointBorderWidth': 1,
-            'pointHoverRadius': 5,
-            'pointHoverBackgroundColor': "rgba(75,192,192,1)",
-            'pointHoverBorderColor': "rgba(220,220,220,1)",
-            'pointHoverBorderWidth': 2,
-            'pointRadius': 2,
-            'pointHitRadius': 10,
-        }
-
-        background_color_mapper = {
-            1: 'rgba(128, 94, 3, 0.2)',
-            2: 'rgba(0, 162, 235, 0.2)',
-            3: 'rgba(0, 206, 86, 0.2)',
-            4: 'rgba(0, 192, 192, 0.2)',
-            5: 'rgba(0, 102, 255, 0.2)',
-            6: 'rgba(0, 159, 64, 0.2)',
-            7: 'rgba(165, 255, 64, 0.2)',
-        }
-
-        rate_type = ('buy', 'sale')
-
-        # Making charts data pattern with empty values, but with keys to call in later
-        for item in self.object_list:
-            chart_sources = [s['source'] for s in charts_data['datasets']]
-            chart_currencies = [c['currency'] for c in charts_data['datasets']]
-            if item.get_source_display() not in chart_sources \
-                    or item.get_currency_display() not in chart_currencies:
-                # separate currency type to buy/sale
-                for type_ in rate_type:
-                    charts_data['datasets'].append({
-                        'source': item.get_source_display(),
-                        'currency': item.get_currency_display(),
-                        'rate_type': type_,
-                        'label': f'{item.get_source_display()} {item.get_currency_display()}: {type_}',
-                        'backgroundColor': [background_color_mapper[item.source]],
-                        **chart_style,
-                        'data': [],
-                    })
-            # fill in pattern with data
-            for values in charts_data['datasets']:
-                for type_ in rate_type:
-                    if type_ == 'buy':
-                        if item.get_source_display() in values['source'] \
-                                and item.get_currency_display() in values['currency'] \
-                                and type_ in values['rate_type']:
-                            values['data'].append(str(item.buy))
-                    else:
-                        if item.get_source_display() in values['source'] \
-                                and item.get_currency_display() in values['currency'] \
-                                and type_ in values['rate_type']:
-                            if not item.sale == 0:
-                                values['data'].append(str(item.sale))
-            charts_data['labels'].append(item.created.strftime("%d.%m.%Y %H:%M"))
+        charts_data = rate_charts(self.object_list)
         charts_data_json = json.dumps(charts_data, indent=4)
         context['charts_data'] = charts_data_json
 
@@ -107,16 +42,29 @@ class FilteredRateList(FilterView):
 
 class RatesList(FilteredRateList):
     template_name = 'rate-list.html'
-    paginate_by = 20
+
+    def get_paginate_by(self, queryset):
+        if self.request.user.is_superuser:
+            paginate_by = 18
+            return paginate_by
+        else:
+            paginate_by = 20
+            return paginate_by
 
 
-class LatestRatesView(TemplateView):  # TODO implement indicators to latest update on fields buy/sale (up/down arrows)
+class LatestRatesView(TemplateView):
     template_name = 'rate-latest.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['object_list'] = get_latest_rates()
+        latest, prior = get_latest_rates()
+        rates = zip(latest, prior)
+        context['rates'] = rates
+
+        charts_data = rate_charts(latest)
+        charts_data_json = json.dumps(charts_data, indent=4)
+        context['charts_data'] = charts_data_json
 
         return context
 

@@ -35,6 +35,24 @@ label {
     box-shadow: 0 4px 8px 0 rgba(19, 19, 19, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.btn-filter {
+    background-color: #6e6e6e;
+    color: #ffffff;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    border-radius: 3px;
+    padding: 5px 15px;
+    border: 1px solid white;
+}
+
+.btn-filter:hover {
+    background-color: #5b5b5d;
+    transition-duration: 0.3s;
+    color: white;
+    box-shadow: 0 4px 8px 0 rgba(19, 19, 19, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
 .btn-table {
     background-color: #737373;
     border: none;
@@ -189,4 +207,18 @@ th {
 #rates-download {
     margin-top: 7px;
     margin-bottom: 7px;
+}
+
+.latest-rates-delta-up {
+    color: red;
+    border-radius: 5px;
+    font-style: italic;
+    font-size: 10px;
+}
+
+.latest-rates-delta-down {
+    color: green;
+    border-radius: 5px;
+    font-style: italic;
+    font-size: 10px;
 }

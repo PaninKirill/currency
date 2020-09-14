@@ -34,7 +34,8 @@ class LatestRatesListView(ListAPIView):
     permission_classes = [IsAuthenticated]
     autentication_classes = [JWTAuthentication]
 
-    queryset = list_to_queryset(Rate, get_latest_rates())
+    latest, prior = get_latest_rates()
+    queryset = list_to_queryset(Rate, latest)
     serializer_class = RateSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = RateFilterAPI

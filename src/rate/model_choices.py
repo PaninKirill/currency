@@ -20,9 +20,21 @@ CURRENCY_USD = 1
 CURRENCY_EUR = 2
 CURRENCY_RUR = 3
 CURRENCY_BTC = 4
+
 CURRENCY_CHOICES = (
     (CURRENCY_USD, 'USD'),
     (CURRENCY_EUR, 'EUR'),
     (CURRENCY_RUR, 'RUR'),
     (CURRENCY_BTC, 'BTC'),
 )
+
+# Charts.js
+BACKGROUND_COLOR_MAPPER = {
+        1: 'rgba(102, 153, 0, 0.1)',
+        2: 'rgba(0, 162, 235, 0.1)',
+        3: 'rgba(0, 206, 86, 0.1)',
+        4: 'rgba(0, 192, 192, 0.1)',
+        5: 'rgba(0, 102, 255, 0.1)',
+        6: 'rgba(0, 159, 64, 0.1)',
+        7: 'rgba(165, 255, 64, 0.1)',
+    }
