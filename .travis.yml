@@ -1,22 +1,10 @@
 language: python
 python:
-  - "3.6"
   - "3.8"
-install:
-  - pip install -r requirements.txt
 services:
-  - postgresql
+  - docker
 before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
-  - cp .env.example .env
-  - python ./src/manage.py makemigrations
-  - python ./src/manage.py migrate
-  - python ./src/manage.py collectstatic
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_USERNAME"
+  - python ./commands/deploy.sh
 script:
-  - flake8 ./src
-  - flake8 ./parse_workua
-  - python ./src/manage.py validate_templates
-  - python ./src/manage.py check
-  - python ./src/manage.py makemigrations --check --dry-run
-  - pip check
-  - pytest ./src/tests -s
+  docker exec backend ./commands/check.sh
