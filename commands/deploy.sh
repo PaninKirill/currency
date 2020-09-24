@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-git pull origin master &&
 cp .env.example .env
 docker-compose up -d --build &&
 docker exec backend python ./src/manage.py migrate &&
