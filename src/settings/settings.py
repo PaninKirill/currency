@@ -185,9 +185,9 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'static_content', 'media')
 
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': lambda request: False if request.is_ajax() else True,
-}
+# DEBUG_TOOLBAR_CONFIG = {
+#     'SHOW_TOOLBAR_CALLBACK': lambda request: False if request.is_ajax() else True,
+# }
 
 INTERNAL_IPS = ['127.0.0.1']
 
