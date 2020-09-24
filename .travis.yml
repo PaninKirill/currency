@@ -5,7 +5,7 @@ python:
 services:
   - docker
 before_script:
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_USERNAME"
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
   - python ./commands/deploy.sh
 script:
   docker exec backend ./commands/check.sh
