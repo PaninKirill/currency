@@ -227,4 +227,4 @@ def test_get_latest_rates_api_auth(api_client, user):
     assert response.status_code == 200
     assert response['allow'] == 'GET, HEAD, OPTIONS'
     assert response['content-type'] == 'application/json'
-    assert response.json()['count'] >= 20
+    assert response.json()['count'] == 19

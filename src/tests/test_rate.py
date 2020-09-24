@@ -1,5 +1,6 @@
 from django.urls import reverse
 
+from rate.model_choices import SOURCE_CHOICES as SOURCES
 from rate.models import Rate
 from rate.utils import to_decimal
 
@@ -284,8 +285,6 @@ def test_latest_rates(client):
     assert response.status_code == 200
 
     # data validation
-    db_rates = Rate.objects.all()
-    assert len(response.context['object_list']) != 0
-    assert len(response.context['object_list']) != len(db_rates)
-    assert response.context['object_list'][0] in db_rates
-    assert 'USD' in str(response.content)
+    assert len(response.context['charts_data']) != 0
+    for source in SOURCES:
+        assert source[1] in response.context['charts_data']

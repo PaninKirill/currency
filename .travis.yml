@@ -11,8 +11,10 @@ before_script:
 script:
   - flake8 ./src
   - flake8 ./parse_workua
+
+  - python ./src/manage.py makemigrations --check --dry-run
+  - python ./src/manage.py migrate
   - python ./src/manage.py validate_templates
   - python ./src/manage.py check
-  - python ./src/manage.py makemigrations --check --dry-run
   - pip check
   - pytest ./src/tests -s
