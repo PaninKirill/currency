@@ -7,7 +7,7 @@ services:
 install:
   - pip install -r requirements.txt
 before_script:
-  - psql -c "CREATE DATABASE currency;" -U postgres
+  - psql -c 'create database travis_ci_test;' -U postgres
   - cp .env.example .env
 script:
   - flake8 ./src
