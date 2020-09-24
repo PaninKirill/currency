@@ -107,15 +107,17 @@ def rate_charts(queryset) -> dict:
                             and type_ in values['rate_type']:
                         if not item.sale == 0:
                             values['data_tuple'].append((charts_data['labels'].index(rate_date), str(item.sale)))
-    def_value = ['0']
+    def_value = []
     for dates in charts_data['datasets']:
         data_dict = dict(dates['data_tuple'])
         for i in range(expected_data_len):
             if i in data_dict.keys():
                 dates['data'].append(data_dict[i])
                 def_value.append(data_dict[i])
+            elif len(dates['data_tuple']) == 0:
+                dates['data'].append('')
             else:
-                dates['data'].append(def_value[-1])
-        dates['data_tuple'].clear()
+                dates['data'].append(dates['data_tuple'][0][1])
+        # dates['data_tuple'].clear()
 
     return charts_data

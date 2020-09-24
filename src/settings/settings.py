@@ -189,8 +189,7 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': lambda request: False if request.is_ajax() else True,
 }
 
-my_ip = socket.gethostbyname(socket.gethostname())
-INTERNAL_IPS = [ip[:-1] + '1' for ip in my_ip] + ['127.0.0.1', '10.0.2.2']
+INTERNAL_IPS = ['127.0.0.1']
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

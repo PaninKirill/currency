@@ -18,7 +18,7 @@ services:
   backend:
     env_file: .env
     build: .
-    container_name: backend
+    container_name: backend_currency
     command: ./commands/wsgi/${SERVER}.sh
     restart: always
     depends_on:

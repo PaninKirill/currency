@@ -33,7 +33,7 @@ class FilteredRateList(FilterView):
             query_params.pop('page')
         context['query_params'] = urlencode(query_params)
 
-        charts_data = rate_charts(self.object_list)
+        charts_data = rate_charts(context['rate_list'])
         charts_data_json = json.dumps(charts_data, indent=4)
         context['charts_data'] = charts_data_json
 
