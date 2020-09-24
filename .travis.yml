@@ -7,7 +7,7 @@ services:
   - postgresql
 before_script:
   - psql -c "CREATE DATABASE $POSTGRES_DB;" -U postgres
-  - psql -c "CREATE USER $POSTGRES_USER WITH PASSWORD $POSTGRES_PASSWORD;" -U $POSTGRES_HOST
+  - psql -c "CREATE USER $POSTGRES_USER WITH PASSWORD '$POSTGRES_PASSWORD';" -U $POSTGRES_HOST
   - cp .env.example .env
 script:
   - flake8 ./src
