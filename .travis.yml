@@ -1,5 +1,4 @@
 language: python
-
 python:
   - "3.8"
 services:
@@ -7,13 +6,11 @@ services:
 install:
   - pip install -r requirements.txt
 before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
-  - cp .env.example .env
+  - psql -c 'create database currency;' -U postgres
 script:
   - flake8 ./src
   - flake8 ./parse_workua
   - python ./src/manage.py makemigrations --check --dry-run
-  - python ./src/manage.py migrate
   - python ./src/manage.py validate_templates
   - python ./src/manage.py check
   - pip check
