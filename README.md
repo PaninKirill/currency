@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/simkimsia/UtilityBehaviors.png)](https://travis-ci.com/PaninKirill/currency.svg?branch=master)
-
+[![codecov](https://codecov.io/gh/PaninKirill/currency/branch/master/graph/badge.svg?token=1QMKMQOF34)](https://codecov.io/gh/PaninKirill/currency)
 ### Currency-exchange
 
 > STACK: 
