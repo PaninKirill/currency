@@ -16,3 +16,5 @@ script:
   - python ./src/manage.py check
   - pip check
   - pytest ./src/tests -s
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
