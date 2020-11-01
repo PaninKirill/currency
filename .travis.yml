@@ -15,6 +15,6 @@ script:
   - python ./src/manage.py validate_templates
   - python ./src/manage.py check
   - pip check
-  - pytest ./src/tests -s
+  - pytest ./src/tests -s -x --cov-config=.coveragerc --cov=src --cov-report html --cov-fail-under=100
 after_success:
   - bash <(curl -s https://codecov.io/bash)
