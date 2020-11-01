@@ -6,6 +6,5 @@ __pycache__/
 *.pyc
 *.log
 tmp/
-static_content/
 .env
 .coverage

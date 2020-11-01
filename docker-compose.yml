@@ -24,6 +24,7 @@ services:
     depends_on:
       - memcached
       - rabbitmq
+      - postgres
     ports:
       - "8000:8000"
     volumes:

@@ -14,7 +14,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class RateListCreateView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
-    autentication_classes = [JWTAuthentication]
+    authentication_classes = [JWTAuthentication]
 
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
@@ -24,7 +24,7 @@ class RateListCreateView(ListCreateAPIView):
 
 class RateReadUpdateDeleteView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
-    autentication_classes = [JWTAuthentication]
+    authentication_classes = [JWTAuthentication]
 
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
@@ -32,7 +32,7 @@ class RateReadUpdateDeleteView(RetrieveUpdateDestroyAPIView):
 
 class LatestRatesListView(ListAPIView):
     permission_classes = [IsAuthenticated]
-    autentication_classes = [JWTAuthentication]
+    authentication_classes = [JWTAuthentication]
 
     latest, prior = get_latest_rates()
     queryset = list_to_queryset(Rate, latest)

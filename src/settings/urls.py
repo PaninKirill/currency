@@ -38,8 +38,8 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
 
     # API
-    path(f'{API_PREFIX}account/', include('account.api.urls')),
     path(f'{API_PREFIX}rate/', include('rate.api.urls')),
+    path(f'{API_PREFIX}account/', include('account.api.urls')),
     path(f'{API_PREFIX}api-auth/', include('rest_framework.urls')),
     path(f'{API_PREFIX}token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
 

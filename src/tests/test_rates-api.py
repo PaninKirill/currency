@@ -211,15 +211,6 @@ def test_crud_rates_api(api_client, user):
     assert response['content-length'] == '0'
 
 
-def test_get_latest_rates_api_not_auth(client):
-    url = reverse('api-rate:latest_rates')
-    response = client.get(url)
-    assert response.status_code == 401
-    response_data = response.json()
-    assert len(response_data) == 1
-    assert response_data['detail'] == 'Authentication credentials were not provided.'
-
-
 def test_get_latest_rates_api_auth(api_client, user):
     url = reverse('api-rate:latest_rates')
     api_client.login(user.username, user.raw_password)
@@ -228,3 +219,12 @@ def test_get_latest_rates_api_auth(api_client, user):
     assert response['allow'] == 'GET, HEAD, OPTIONS'
     assert response['content-type'] == 'application/json'
     assert response.json()['count'] == 19
+
+
+def test_get_latest_rates_api_not_auth(client):
+    url = reverse('api-rate:latest_rates')
+    response = client.get(url)
+    assert response.status_code == 401
+    response_data = response.json()
+    assert len(response_data) == 1
+    assert response_data['detail'] == 'Authentication credentials were not provided.'

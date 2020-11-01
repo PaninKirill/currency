@@ -175,7 +175,7 @@ def test_logout(client, user):
 
 def test_signup_correct_payload(client, fake):
     url = reverse('account:sign-up')
-    initial_mail_count = len(mail.outbox) + 1
+    initial_mail_count = len(mail.outbox)
     response = client.get(url)
     assert response.status_code == 200
     user_email = fake.email()
@@ -188,13 +188,11 @@ def test_signup_correct_payload(client, fake):
     response = client.post(url, payload)
     assert response.status_code == 302
     assert response['Location'] == reverse('index')
-    response = client.post(url, follow=True)
-    assert response.status_code == 200
 
     # generate activation url with token
     user = User.objects.last()
     send_signup_email_async(user.id)
-    assert len(mail.outbox) == initial_mail_count + 1
+    assert len(mail.outbox) == initial_mail_count + 2
     email = mail.outbox[initial_mail_count]
     activation_url = str(email.body).split(' ')[-1]
     token = str(email.body).split('/')[-2]
@@ -248,14 +246,15 @@ def test_signup_incorrect_payload(client, fake):
     assert response.status_code == 200
     payload = {
         'email': user.email,
-        'password1': '',
-        'password2': fake.password(),
+        'password1': fake.password(),
+        'password2': fake.password()
     }
     response = client.post(url, payload)
     errors = response.context_data['form'].errors
     assert len(errors) == 2
     assert errors['email'] == ['User with given email exists!']
-    assert errors['password1'] == ['This field is required.']
+    assert errors['password2'] == ["The two password fields didn't match."]
+
     payload = {
         'email': fake.email(),
         'password1': fake.password(),

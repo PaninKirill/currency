@@ -5,12 +5,11 @@ from account.models import Contact, User
 from django.urls import reverse
 
 
-def test_get_rates_api_not_auth(client):
+def test_get_users_api_not_auth(client):
     url = reverse('api-account:users')
     response = client.get(url)
-    assert response.status_code == 401
+    assert response.status_code == 403
     response_data = response.json()
-    assert len(response_data) == 1
     assert response_data['detail'] == 'Authentication credentials were not provided.'
 
 
@@ -19,7 +18,7 @@ def test_get_api_users_registered_user(api_client, user):
     api_client.login(user.username, user.raw_password)
     response = api_client.get(url)
     assert response.status_code == 403
-    assert response.json()['detail'] == 'You do not have permission to perform this action.'
+    assert response.json()['detail'] == 'Authentication credentials were not provided.'
 
 
 def test_get_api_users_admin(admin_client):
@@ -65,19 +64,17 @@ def test_rates_api_filters_post(admin_client):
     assert User.objects.count() == initial_count + 1
 
 
-def test_users_account_api_put(admin_client):
-    url = reverse('api-account:users')
+def test_users_account_api_put(admin_client, fake):
     user = User.objects.first()
-    path = '/'
-    url = url + str(user.id) + path
+    url = reverse('api-account:user', args=[user.id])
     payload = {
-        "id": f"{user.id}",
-        "username": "user",
-        "first_name": "user",
-        "last_name": "user",
-        "email": "user@example.com",
+        "id": user.id,
+        "username": fake.user_name(),
+        "first_name": fake.first_name(),
+        "last_name": fake.last_name(),
+        "email": user.email,
         "is_active": "true",
-        "date_joined": "2020-07-22T07:58:22.701000Z"
+        "date_joined": user.date_joined
     }
     response = admin_client.put(url, payload, content_type='application/json')
     assert response.status_code == 200

@@ -1,6 +1,7 @@
 import hashlib
 
 from django.core.cache import cache
+from django.db import ProgrammingError
 
 from rate import model_choices as mch
 from rate.models import Rate
@@ -39,7 +40,11 @@ def get_latest_rates() -> tuple:
                         source=source,
                         currency=currency,
                     ).order_by('-created')[:2]
-                except ValueError:  # exception occurs if currency not bound to source (only PB has BTC)
+                except ProgrammingError:
+                    # in case no data in db, no migrations has applied
+                    latest, prior = None, None
+                except ValueError:
+                    # in case the source doesn't have a currency that others have
                     continue
                 if latest is not None:
                     cache.set(key_latest, latest, 30)

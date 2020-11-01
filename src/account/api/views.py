@@ -8,10 +8,12 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 
 class UserListCreateView(ListCreateAPIView):
     permission_classes = [IsAdminUser]
-    autentication_classes = [SessionAuthentication]
+    authentication_classes = [SessionAuthentication]
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -21,7 +23,7 @@ class UserListCreateView(ListCreateAPIView):
 
 class UserReadUpdateDeleteView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser]
-    autentication_classes = [SessionAuthentication]
+    authentication_classes = [SessionAuthentication]
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -29,7 +31,7 @@ class UserReadUpdateDeleteView(RetrieveUpdateDestroyAPIView):
 
 class ContactCreateView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
-    autentication_classes = [SessionAuthentication]
+    authentication_classes = [JWTAuthentication]
 
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
